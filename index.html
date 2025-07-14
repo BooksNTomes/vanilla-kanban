@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Kanban-JS</title>
 </head>
 <body>
-    <header>
+    <header class="border">
         <h1 id="h1Title">Kanban JS</h1>
     </header>
 
-    <main>
-        <div class="board">
-            <div class="container-details">
+    <main class="border">
+        
+        <div class="board-container border">
+            <div class="board-details-container">
                 <h2 id="h2CurrentBoard">Current Board: default</h2>
-
-                <div class="container-btn"> 
+    
+                <div class="board-btn-container"> 
                     <button id="btnOpenBoard">Open Board</button>
                     <button id="btnSaveBoard">Save Board</button>
                     <button id="btnConfigureBoard">Configure Board</button>
@@ -23,30 +25,115 @@
             </div>
             <button id="btnAddSection">Add Section</button>
 
-            <div class="section">
-                <div class="container-details">
-                    <h3 id="h3SectionName">Section</h3>
-                    
-                    <div class="container-btn">
-                        <button id="btnConfigureBoard">Configure Section</button>
-                    </div>
-                </div>
-
-                <button id="btnAddTask">Add Task</button>
-                <div class="task">
-                    <div class="container-details">
-                        <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+            <div class="board-contents-container">
+                <div class="section-container border">
+                    <div class="section-details-container">
+                        <h3 id="h3SectionName">Section</h3>
                         
-                        <div class="container-btn">
-                            <button id="btnConfigureBoard">Configure Task</button>
+                        <div class="section-btn-container">
+                            <button id="btnConfigureBoard">Configure Section</button>
                         </div>
                     </div>
+    
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAddTask">Add Task</button>
                 </div>
+    
+                <div class="section-container border">
+                    <div class="section-details-container">
+                        <h3 id="h3SectionName">Section</h3>
+                        
+                        <div class="section-btn-container">
+                            <button id="btnConfigureBoard">Configure Section</button>
+                        </div>
+                    </div>
+    
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAddTask">Add Task</button>
+                </div>
+    
+                <div class="section-container border">
+                    <div class="section-details-container">
+                        <h3 id="h3SectionName">Section</h3>
+                        
+                        <div class="section-btn-container">
+                            <button id="btnConfigureBoard">Configure Section</button>
+                        </div>
+                    </div>
+    
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAddTask">Add Task</button>
+                </div>
+    
+                <div class="section-container border">
+                    <div class="section-details-container">
+                        <h3 id="h3SectionName">Section</h3>
+                        
+                        <div class="section-btn-container">
+                            <button id="btnConfigureBoard">Configure Section</button>
+                        </div>
+                    </div>
+    
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-container border">
+                        <div class="task-details-container">
+                            <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                            
+                            <div class="task-btn-container">
+                                <button id="btnConfigureBoard">Configure Task</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAddTask">Add Task</button>
+                </div>
+
             </div>
         </div>
+
     </main>
 
-    <footer>
+    <footer class="border">
         <h2>Kanban-JS 2025</h2>
     </footer>
 

@@ -1,0 +1,75 @@
+/* Full Reset and Accurate Boxing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.border {
+    border-style: solid;
+    border-color: aqua;
+}
+
+
+/**/
+header {
+    padding: 1em 0em 1em;
+}
+
+header h1 {
+    margin-left:4rem;
+    margin-right:4rem;
+}
+
+/**/
+main {
+    padding: 1em 0em 1em;
+}
+
+/**/
+.board-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 4rem;
+    margin-right:4rem;
+}
+.board-details-container {
+    display:flex;
+}
+.board-contents-container {
+    display:flex;
+}
+
+/**/
+.section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+}
+.section-details-container {
+    display:flex;
+}
+
+/**/
+.task-container {
+    width: 90%;
+}
+.task-details-container {
+    display:flex;
+}
+
+/**/
+footer {
+    padding: 1em 0em 1em;
+}
+
+footer h2 {
+    margin-left:4rem;
+    margin-right:4rem;
+} 
