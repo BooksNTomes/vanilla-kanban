@@ -7,16 +7,44 @@
 </head>
 <body>
     <header>
-        <h1>Kanban-JS</h1>
+        <h1 id="h1Title">Kanban JS</h1>
     </header>
 
-    <div id="canvas">
-        <button>Add Section</button> <!--Add Column-->
-        
-        <button>Add Task</button> <!--Add Row / Entry-->
+    <main>
+        <div class="board">
+            <div class="container-details">
+                <h2 id="h2CurrentBoard">Current Board: default</h2>
 
+                <div class="container-btn"> 
+                    <button id="btnOpenBoard">Open Board</button>
+                    <button id="btnSaveBoard">Save Board</button>
+                    <button id="btnConfigureBoard">Configure Board</button>
+                </div>
+            </div>
+            <button id="btnAddSection">Add Section</button>
 
-    </div>
+            <div class="section">
+                <div class="container-details">
+                    <h3 id="h3SectionName">Section</h3>
+                    
+                    <div class="container-btn">
+                        <button id="btnConfigureBoard">Configure Section</button>
+                    </div>
+                </div>
+
+                <button id="btnAddTask">Add Task</button>
+                <div class="task">
+                    <div class="container-details">
+                        <h4 class="taskname"><span class="color-tag black"></span>Task</h4>
+                        
+                        <div class="container-btn">
+                            <button id="btnConfigureBoard">Configure Task</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer>
         <h2>Kanban-JS 2025</h2>

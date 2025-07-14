@@ -12,10 +12,10 @@
 - WIP
 
 # Roadmap : Subject to Changes
-- 1. (Currently Here) Initialization
-- 2. HTML Implementation
-- 3. CSS Implementation
-- 4. JS Implementation
-- 5. Testing 
-- 6. Refactoring for easy configuration
-- 6. Publication
+- (Currently Here) Initialization
+- HTML Implementation
+- CSS Implementation
+- JS Implementation
+- Testing 
+- Refactoring for easy configuration
+- Publication
