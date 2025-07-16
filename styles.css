@@ -88,6 +88,8 @@ main {
 }
 .board-contents-container {
     display:flex;
+    align-items: flex-start;
+    overflow: scroll;
     
     margin-left: 4rem;
     margin-right: 4rem;
@@ -121,6 +123,22 @@ main {
     flex-direction: column;
     width: 25%;
 }
+.section-container button {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: white;
+    border: 1px solid hsla(0, 0%, 0%, 0.1);
+    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
+    border-radius: .5rem;
+
+    font-size: 12px;
+    padding:.5rem;
+}
+.section-container button:hover {
+    background-color: hsl(0, 0%, 98%);
+}
+.section-container button:active {
+    background-color: hsl(0, 0%, 95%);
+}
 .section-details-container {
     font-family:Arial, Helvetica, sans-serif;
 
@@ -130,12 +148,29 @@ main {
     align-items: center;
     justify-content: space-between;
 }
+.section-details-container button {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: white;
+    border: 1px solid hsla(0, 0%, 0%, 0.1);
+    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
+    border-radius: .5rem;
+
+    font-size: 12px;
+    padding:.5rem;
+}
+.section-details-container button:hover {
+    background-color: hsl(0, 0%, 98%);
+}
+.section-details-container button:active {
+    background-color: hsl(0, 0%, 95%);
+}
 .section-content-container {
     padding: 1rem;
     display:flex;
     flex-direction: column;
     align-items: center;
 }
+
 
 /**/
 .task-container {
@@ -152,6 +187,27 @@ main {
     color:black;
     display:flex;
     justify-content: space-between;
+}
+.task-details-container p {
+    font-size: 12px;
+    overflow: hidden;
+    overflow-wrap:break-word;
+}
+.task-details-container button {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: white;
+    border: 1px solid hsla(0, 0%, 0%, 0.1);
+    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
+    border-radius: .5rem;
+
+    font-size: 12px;
+    padding:.5rem;
+}
+.task-details-container button:hover {
+    background-color: hsl(0, 0%, 98%);
+}
+.task-details-container button:active {
+    background-color: hsl(0, 0%, 95%);
 }
 
 /**/
