@@ -1,0 +1,17 @@
+{
+    "board-name": "Default",
+    "bg-color1": "white",
+    "bg-color2": "#FFFFFF",
+    "content": [
+        {
+            "section-name": "Section 1",
+            "bg-color": "#FFFFFF",
+            "content": [
+                {
+                    "task-name": "Task 1",
+                    "bg-color": "#FFFFFF"
+                }
+            ]
+        }
+    ]
+}
