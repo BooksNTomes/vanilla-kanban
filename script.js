@@ -97,7 +97,7 @@ alternative method, add classlist
 class Board {
     // Create
     constructor(name, bgColor1, bgColor2){
-        // Id
+
         this.id = randomizeId();
 
         // Board Configuration
@@ -106,15 +106,15 @@ class Board {
         this.bgColor2 = bgColor2 !== null? bgColor2 : '#FFFFFF';
 
         // Elements
-        this.boardName = createBoardName(name);
+        this.boardName = this.createBoardName(name);
         setBoardBgColor1(bgColor1);
         setBoardBgColor2(bgColor2);
 
-        this.openBoardBtn = createOpenBoardBtn();
-        this.saveBoardBtn = createSaveBoardBtn();
-        this.configureBoardBtn = createConfigureBoardBtn();
-        this.newBoardBtn = createNewBoardBtn();
-        this.addSectionBtn = createAddSectionBtn();
+        this.openBoardBtn = this.createOpenBoardBtn();
+        this.saveBoardBtn = this.createSaveBoardBtn();
+        this.configureBoardBtn = this.createConfigureBoardBtn();
+        this.newBoardBtn = this.createNewBoardBtn();
+        this.addSectionBtn = this.createAddSectionBtn();
 
         // Section List
         this.contents = []
@@ -124,15 +124,15 @@ class Board {
     set board([name, bgColor1, bgColor2]){
         if (this.name !== name && name !== null) {
             this.name = name;
-            setBoardName(name);
+            this.setBoardName(name);
         }
         if (this.bgColor1 !== bgColor1) {
             this.bgColor1 = bgColor1;
-            setBoardBgColor1(bgColor1);
+            this.setBoardBgColor1(bgColor1);
         }
         if (this.bgColor2 !== bgColor2) {
             this.bgColor2 = bgColor2;
-            setBoardBgColor2(bgColor2);
+            this.setBoardBgColor2(bgColor2);
         }
     }
 
@@ -154,51 +154,32 @@ class Board {
         boardContainer.classList = `board-container`;
         boardContainer.style.backgroundColor = this.bgColor2;
         
-        // create children board details container
-        // board name h2
+        // create child board details container
         var boardDetailsContainer = document.createElement("div");
-        boardDetailsContainer.classList = `board-details-container`
-        var h2BoardName = document.createElement("h2");
-        h2BoardName.innerHTML = this.boardName;
-        
+        boardDetailsContainer.classList = `board-details-container`;
         // board button container
         var boardButtonContainer = document.createElement("div");
         boardButtonContainer.classlist = `board-btn-container`;
-        var openBoardButton = document.createElement("button");
-        openBoardButton.innerHTML = "Open Board";
-        var saveBoardButton = document.createElement("button");
-        saveBoardButton.innerHTML = "Save Board";
-        var configureBoardButton = document.createElement("button");
-        configureBoardButton.innerHTML = "Configure Board";
-        var newBoardButton = document.createElement("button");
-        newBoardButton.innerHTML = "New Board";
-        
-        boardButtonContainer.appendChild(openBoardButton);
-        boardButtonContainer.appendChild(saveBoardButton);
-        boardButtonContainer.appendChild(configureBoardButton);
-        boardButtonContainer.appendChild(newBoardButton);
-
-        boardDetailsContainer.appendChild(h2BoardName);
+        // append button container children
+        boardButtonContainer.appendChild(this.openBoardBtn);
+        boardButtonContainer.appendChild(this.saveBoardBtn);
+        boardButtonContainer.appendChild(this.configureBoardBtn);
+        boardButtonContainer.appendChild(this.newBoardBtn);
+        // append board details container children
+        boardDetailsContainer.appendChild(this.boardName);
         boardDetailsContainer.appendChild(boardButtonContainer);
-
-        // add section button
-        var addSectionButton = document.createElement("button");
-        addSectionButton.innerHTML = "Add Section";
-
-        // board contents container
+        // create board contents container
         var boardContentsContainer = document.createElement("div");
         boardContentsContainer.classList = 'board-contents-container';
         for (var i = 0; i < this.contents.length; i++){
             var section = Section(this.contents[i]);
             boardContentsContainer.appendChild(section);
         }
-
         boardContainer.appendChild(boardDetailsContainer);
-        boardContainer.appendChild(addSectionButton);
+        boardContainer.appendChild(this.addSectionBtn);
         boardContainer.appendChild(boardContentsContainer);
 
         document.getElementById("main-container").appendChild(boardContainer)
-        // OR RETURN boardContainer for a separate function
     }
 
     // Insert
