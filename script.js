@@ -13,7 +13,87 @@
 // var boardBgColor2 = document.getElementById("boardBgColor2");
 // var addSectionBtn = document.getElementById("addSectionBtn");
 
-// Todo Incorporate Containers
+
+/* HTML DOM Structure
+Board:
+    - div class board-container
+        - div class board-details-container
+            - board name - h2
+            - div class board-btn-container
+                - Open Board
+                - Save Board
+                - Configure Board
+        - button id btnAddSection
+        - div class board-contents-container
+            - contents:
+Section:
+    - div class section-container
+        - div class section-details container
+            - section name - h4
+            - div class section-btn-container
+                - Configure Section
+        - button id btnAddTask
+Task:
+    - div class task-container
+        - div class task-details-container
+            - task name p
+            - div class task-btn-container
+                - Configure Board
+*/
+
+/* JSON Design
+{
+    "board-name": "Default",
+    "bg-color1": "white",
+    "bg-color2": "#FFFFFF",
+    "content": [
+        {
+            "section-name": "Section 1",
+            "bg-color": "#FFFFFF",
+            "content": [
+                {
+                    "task-name": "Task 1",
+                    "bg-color": "#FFFFFF"
+                }
+            ]
+        }
+    ]
+}
+
+Procedure:
+    - Create Board:
+        create div board-container 
+            - set color to bgcolor 2
+            create children board details container
+                - create board name -h2 "board-name"
+                create children div boardbuttoncontainer
+                    create children open board
+                    create children save board
+                    create children configure board
+            create children button addsection
+            create children div boardcontentscontainer
+                create children contents
+                - create new section classes based on list/array
+    - Create Section:
+        create div section-container
+            create children div section-details container
+                create section name - h4
+                create children div section-btn-container
+                    create configure section button
+            create button id btnAddTask
+    - Create Task:
+        create div task-container
+            create children task-details-container
+                - task name p
+                - div class task-btn-container
+                    Configure Board
+
+set header color to bgcolor1
+set main color to bgcolor2
+
+alternative method, add classlist
+*/
+
 class Board {
     // Create
     constructor(name, bgColor1, bgColor2){
@@ -26,21 +106,21 @@ class Board {
         this.bgColor2 = bgColor2 !== null? bgColor2 : '#FFFFFF';
 
         // Elements
+        this.boardName = createBoardName(name);
+        setBoardBgColor1(bgColor1);
+        setBoardBgColor2(bgColor2);
+
         this.openBoardBtn = createOpenBoardBtn();
         this.saveBoardBtn = createSaveBoardBtn();
         this.configureBoardBtn = createConfigureBoardBtn();
         this.newBoardBtn = createNewBoardBtn();
         this.addSectionBtn = createAddSectionBtn();
 
-        this.boardName = createBoardName(name);
-        setBoardBgColor1(bgColor1);
-        setBoardBgColor2(bgColor2);
-
         // Section List
         this.contents = []
     }
 
-    // Edit
+    // Edit / Update
     set board([name, bgColor1, bgColor2]){
         if (this.name !== name && name !== null) {
             this.name = name;
@@ -64,6 +144,61 @@ class Board {
             "bg-color2" : this.bgColor2,
             "contents" : this.contents
         };
+    }
+
+    // Read : Render
+    render_board(){
+
+        // create div board container
+        var boardContainer = document.createElement("div");
+        boardContainer.classList = `board-container`;
+        boardContainer.style.backgroundColor = this.bgColor2;
+        
+        // create children board details container
+        // board name h2
+        var boardDetailsContainer = document.createElement("div");
+        boardDetailsContainer.classList = `board-details-container`
+        var h2BoardName = document.createElement("h2");
+        h2BoardName.innerHTML = this.boardName;
+        
+        // board button container
+        var boardButtonContainer = document.createElement("div");
+        boardButtonContainer.classlist = `board-btn-container`;
+        var openBoardButton = document.createElement("button");
+        openBoardButton.innerHTML = "Open Board";
+        var saveBoardButton = document.createElement("button");
+        saveBoardButton.innerHTML = "Save Board";
+        var configureBoardButton = document.createElement("button");
+        configureBoardButton.innerHTML = "Configure Board";
+        var newBoardButton = document.createElement("button");
+        newBoardButton.innerHTML = "New Board";
+        
+        boardButtonContainer.appendChild(openBoardButton);
+        boardButtonContainer.appendChild(saveBoardButton);
+        boardButtonContainer.appendChild(configureBoardButton);
+        boardButtonContainer.appendChild(newBoardButton);
+
+        boardDetailsContainer.appendChild(h2BoardName);
+        boardDetailsContainer.appendChild(boardButtonContainer);
+
+        // add section button
+        var addSectionButton = document.createElement("button");
+        addSectionButton.innerHTML = "Add Section";
+
+        // board contents container
+        var boardContentsContainer = document.createElement("div");
+        boardContentsContainer.classList = 'board-contents-container';
+        for (var i = 0; i < this.contents.length; i++){
+            var section = Section(this.contents[i]);
+            boardContentsContainer.appendChild(section);
+        }
+
+        boardContainer.appendChild(boardDetailsContainer);
+        boardContainer.appendChild(addSectionButton);
+        boardContainer.appendChild(boardContentsContainer);
+
+        document.getElementById("main-container").appendChild(boardContainer)
+        // OR RETURN boardContainer for a separate function
     }
 
     // Insert

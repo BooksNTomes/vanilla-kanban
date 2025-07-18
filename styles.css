@@ -10,11 +10,21 @@
     padding: 0;
 }
 
+/* Utility Styles */
 .border {
     border-style: solid;
     border-color: aqua;
 }
 
+body{
+    background-color: black;
+}
+
+/* BGColor Styles */
+
+/* Button Styles */
+
+/* Font Styles */
 
 /*Header*/
 header {
@@ -40,9 +50,6 @@ header h1 span {
 }
 
 /**/
-body{
-    background-color: black;
-}
 main {
     padding: 1rem 0em 1rem;
     background-color: white;
