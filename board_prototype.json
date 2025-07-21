@@ -1,15 +1,15 @@
 {
-    "board-name": "Default",
-    "bg-color1": "white",
-    "bg-color2": "#FFFFFF",
+    "name": "Default",
+    "bgColor1": "white",
+    "bgColor2": "#FFFFFF",
     "content": [
         {
-            "section-name": "Section 1",
-            "bg-color": "#FFFFFF",
+            "name": "Section 1",
+            "bgColor": "#FFFFFF",
             "content": [
                 {
-                    "task-name": "Task 1",
-                    "bg-color": "#FFFFFF"
+                    "name": "Task 1",
+                    "bgColor": "#FFFFFF"
                 }
             ]
         }
