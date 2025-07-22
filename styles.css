@@ -90,6 +90,11 @@ main {
     font-weight: normal;
     font-size: 16px;
 }
+.board-btn-container {
+    display:flex;
+    gap:0.5rem;
+}
+
 .board-contents-container {
     display:flex;
     align-items: flex-start;
@@ -126,7 +131,10 @@ main {
 
     color:black;
 }
-
+.section-btn-container {
+    display:flex;
+    gap:0.5rem;
+}
 .section-content-container {
     padding: 1rem;
     display:flex;
@@ -157,6 +165,10 @@ main {
     overflow: hidden;
     overflow-wrap:break-word;
     padding: 1rem 0rem 1rem;
+}
+.task-btn-container {
+    display:flex;
+    gap:0.5rem;
 }
 .task-details-container button {
     min-width:100px;

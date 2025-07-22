@@ -89,26 +89,31 @@ class Board {
     render(){
         // create div board container
         var boardContainer = document.createElement("div");
-        boardContainer.classList = `board-container`;
+        boardContainer.id = `divBoardContainer`
+        boardContainer.classList.add(`board-container`);
         boardContainer.style.backgroundColor = this.bgColor2;
         
         // create child board details container
         var boardDetailsContainer = document.createElement("div");
-        boardDetailsContainer.classList = `board-details-container`;
+        boardDetailsContainer.classList.add(`board-details-container`);
+
         // board button container
         var boardButtonContainer = document.createElement("div");
-        boardButtonContainer.classlist = `board-btn-container`;
+        boardButtonContainer.classList.add(`board-btn-container`);
+        
         // append button container children
         boardButtonContainer.appendChild(this.openBoardBtn);
         boardButtonContainer.appendChild(this.saveBoardBtn);
         boardButtonContainer.appendChild(this.configureBoardBtn);
         boardButtonContainer.appendChild(this.newBoardBtn);
+        
         // append board details container children
         boardDetailsContainer.appendChild(this.boardName);
         boardDetailsContainer.appendChild(boardButtonContainer);
+
         // create board contents container
         var boardContentsContainer = document.createElement("div");
-        boardContentsContainer.classList = 'board-contents-container';
+        boardContentsContainer.classList.add('board-contents-container');
         for (var i = 0; i < this.contents.length; i++){
             var section = new Section(this.id, i, this.contents[i].name, this.contents[i].bgColor, this.contents[i].contents);
             var sectionContainer = section.render();
@@ -155,18 +160,18 @@ class Board {
     /* WIP */
     // setBoardBgColor1(bgColor1){ // Placeholder
     //     var element = document.getElementById('h2CurrentBoard');
-    //     element.classList = bgColor1;
+    //     element.classList.add(bgColor1);
     // }
     // setBoardBgColor2(bgColor2){ // Placeholder
     //     var element = document.getElementById('h2CurrentBoard');
-    //     element.classList = bgColor1;
+    //     element.classList.add(bgColor1);
     // }
 
     // Todo Onclick Functions
     createOpenBoardBtn(){
         var element = document.createElement("button");
         element.id = 'btnOpenBoard';
-        element.classList = '';
+        element.classList.add();
         element.innerHTML = `Open Board`;
         element.addEventListener('click', (event) =>{
             // this.openBoardState = this.openBoardState === 'closed' ? 'opened' : 'closed'       
@@ -182,7 +187,7 @@ class Board {
     createSaveBoardBtn(){
         var element = document.createElement("button");
         element.id = 'btnSaveBoard';
-        element.classList = '';
+        element.classList.add();
         element.innerHTML = `Save Board`;
         element.addEventListener('click', (event) =>{
             // saveModelsToJSON('board.json', JSON.stringify(this.board))
@@ -192,7 +197,7 @@ class Board {
     createConfigureBoardBtn(){
         var element = document.createElement("button");
         element.id = 'btnConfigureBoard';
-        element.classList = '';
+        element.classList.add();
         element.innerHTML = `Configure Board`;
         element.addEventListener('click', (event) =>{
             
@@ -201,8 +206,8 @@ class Board {
     }
     createNewBoardBtn(){
         var element = document.createElement("button");
-        element.id = 'btnNewBoard'; // Placeholder
-        element.classList = ''; // Placeholder
+        element.id = 'btnNewBoard';
+        element.classList.add();
         element.innerHTML = `New Board`;
         element.addEventListener('click', (event) => {
 
@@ -211,8 +216,8 @@ class Board {
     }
     createAddSectionBtn(){
         var element = document.createElement("button");
-        element.id = 'btnAddSection'; // Placeholder
-        element.classList = ''; // Placeholder
+        element.id = 'btnAddSection';
+        element.classList.add();
         element.innerHTML = `Add Section`;
         element.addEventListener('click', (event) => {
 
@@ -271,16 +276,16 @@ class Section {
     render(){
         // create div section container
         var sectionContainer = document.createElement("div");
-        sectionContainer.classList = `section-container`;
+        sectionContainer.classList.add(`section-container`);
         sectionContainer.style.backgroundColor = this.bgColor;
         
         // create child board details container
         var sectionDetailsContainer = document.createElement("div");
-        sectionDetailsContainer.classList = `section-details-container`;
+        sectionDetailsContainer.classList.add(`section-details-container`);
 
         // board button container
         var sectionButtonContainer = document.createElement("div");
-        sectionButtonContainer.classlist = `section-btn-container`;
+        sectionButtonContainer.classList.add(`section-btn-container`);
 
         // append button container children
         sectionButtonContainer.appendChild(this.configureSectionBtn);
@@ -291,15 +296,15 @@ class Section {
 
         // create section contents container
         var sectionContentsContainer = document.createElement("div");
-        sectionContentsContainer.classList = 'section-contents-container';
+        sectionContentsContainer.classList.add('section-content-container');
         for (var i = 0; i < this.contents.length; i++){
             var task = new Task(this.index, i, this.contents[i].name, this.contents[i].bgColor);
             var taskContainer = task.render()
             sectionContentsContainer.appendChild(taskContainer);
         }
         sectionContainer.appendChild(sectionDetailsContainer);
-        sectionContainer.appendChild(this.addTaskBtn);
         sectionContainer.appendChild(sectionContentsContainer);
+        sectionContainer.appendChild(this.addTaskBtn);
 
         return sectionContainer;
     }
@@ -340,7 +345,7 @@ class Section {
     createConfigureSectionBtn(){
         var element = document.createElement("button");
         element.id = 'configureSectionBtn';
-        element.classList = ''; // Placeholder
+        element.classList.add();
         element.innerHTML = `Configure Section`;
         element.addEventListener('click', (event) => {
             this.selfDelete()
@@ -350,10 +355,10 @@ class Section {
     createAddTaskBtn(){
         var element = document.createElement("button");
         element.id = 'addTaskBtn';
-        element.classList = ''; // Placeholder
+        element.classList.add();
         element.innerHTML = `Add Task`;
         element.addEventListener('click', () => {
-            var params = createDefaultTask;
+            var params = createDefaultTask();
             this.pushTask(params);
             rerender()
         })
@@ -410,16 +415,17 @@ class Task {
     render(){
         // create div section container
         var taskContainer = document.createElement("div");
-        taskContainer.classList = `task-container`;
+        taskContainer.classList.add(`task-container`);
         taskContainer.style.backgroundColor = this.bgColor;
+        taskContainer.draggable = true;
         
         // create child board details container
         var taskDetailsContainer = document.createElement("div");
-        taskDetailsContainer.classList = `task-details-container`;
+        taskDetailsContainer.classList.add(`task-details-container`);
 
         // board button container
         var taskButtonContainer = document.createElement("div");
-        taskButtonContainer.classlist = `task-btn-container`;
+        taskButtonContainer.classList.add(`task-btn-container`);
 
         // append button container children
         taskButtonContainer.appendChild(this.configureTaskBtn);
@@ -431,7 +437,7 @@ class Task {
         // create section contents container
         var taskContentsContainer = document.createElement("div");
         /* FUTURE WIP */
-        // // taskContentsContainer.classList = 'task-contents-container';
+        // // taskContentsContainer.classList.add('task-contents-container');
         // // for (var i = 0; i < this.contents.length; i++){
         // //     var task = Task(this.contents[i]);
         // //     taskContentsContainer.appendChild(task);
@@ -453,7 +459,7 @@ class Task {
     createConfigureTaskBtn(){
         var element = document.createElement("button");
         element.id = 'configureTaskBtn';
-        element.classList = ''; // Placeholder
+        element.classList.add();
         element.innerHTML = `Configure Task`;
         element.addEventListener('click', (event) => {
             this.selfDelete()
@@ -468,21 +474,19 @@ function mainHandler(){
 
 // Loading and Rendering
 function load(){
-    const thisBoard = loadBoardDefaults()
-    renderBoard(thisBoard.render())
-    return thisBoard
+    const thisBoard = loadBoardDefaults();
+    renderBoardToMain(thisBoard.render());
+    return thisBoard;
 } // -> Returns Default Board On Startup
 
 function renderBoardToMain(boardContainer){
-    document.getElementById("main-container").appendChild(boardContainer);
+    document.getElementById("divMainContainer").appendChild(boardContainer);
 }
 
 function rerender(){
-    const boardContainer = document.getElementsByClassName("board-container")
-    while (boardContainer.length !== 0){
-        boardContainer[0].parentNode.removeChild(boardContainer[0])
-    }
-    renderBoardToMain(board.render())
+    const boardContainer = document.getElementById("divBoardContainer");
+    boardContainer.parentNode.removeChild(boardContainer);
+    renderBoardToMain(board.render());
 }
 
 // Board Loading
@@ -571,4 +575,3 @@ function drop(){
 
 // Main
 var board = load();
-const mainContainer = document.getElementById("main-container")
