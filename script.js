@@ -2,6 +2,15 @@
 function randomizeId() {
     return Math.round(Math.random(Number.MIN_VALUE / 2, Number.MAX_VALUE / 2)) + Math.round(Math.random(Number.MIN_VALUE, Number.MAX_VALUE) / 2);
 }
+function openOverlay(){
+    const divOverlay = document.getElementById("divOverlay")
+    divOverlay.style.display = 'block';
+}
+function closeOverlay(){
+    const divOverlay = document.getElementById("divOverlay")
+    divOverlay.style.display = 'none';
+}
+
 
 // Templates
 function createDefaultBoard() {
@@ -50,15 +59,12 @@ class Board {
         this.configureBoardBtn = this.createConfigureBoardBtn();
         this.newBoardBtn = this.createNewBoardBtn();
         this.addSectionBtn = this.createAddSectionBtn();
-
-        // Popups
-        this.uploadContainer = null;
-        this.configContainer = null;
-
+        
         // Section List
         this.contents = contents
     }
 
+    /* WIP */
     // Edit / Update
     set board([name, bgColor1, bgColor2, contents]){
         if (this.name !== name && name !== null) {
@@ -96,6 +102,9 @@ class Board {
         boardContainer.id = `divBoardContainer`
         boardContainer.classList.add(`board-container`);
         boardContainer.style.backgroundColor = this.bgColor2;
+
+        // update name
+        this.boardName = this.createBoardName(this.name);
         
         // create child board details container
         var boardDetailsContainer = document.createElement("div");
@@ -222,7 +231,7 @@ class Board {
         element.classList.add();
         element.innerHTML = `Configure Board`;
         element.addEventListener('click', (event) =>{
-            
+            this.openConfig();
         });
         return element;
     }
@@ -253,17 +262,53 @@ class Board {
         return element;
     }
 
-    // Config Container
-    createConfigContainer(){
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
 
-    }
-    showConfigContainer(){
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
 
-    }
-    closeConfigContainer(){
-        
-    }
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
 
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.name = inputName.value;
+                
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
+    }
 }
 class Section {
     // Create
@@ -382,7 +427,7 @@ class Section {
         element.classList.add();
         element.innerHTML = `Configure Section`;
         element.addEventListener('click', (event) => {
-            this.selfDelete()
+            this.openConfig();
         })
         return element;
     }
@@ -399,6 +444,65 @@ class Section {
         return element;
     }
 
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
+
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
+
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
+
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.contents[this.index].name = inputName.value;
+                
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnDelete = document.createElement('button');
+        btnDelete.id = 'btnDelete';
+        btnDelete.innerHTML = 'Delete';
+        btnDelete.addEventListener('click', (event) => {
+            this.selfDelete();
+
+            divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnDelete);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
+    }
 }
 class Task {
     // Create
@@ -495,9 +599,69 @@ class Task {
         element.classList.add();
         element.innerHTML = `Configure Task`;
         element.addEventListener('click', (event) => {
-            this.selfDelete()
+            this.openConfig()
         })
         return element;
+    }
+
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
+
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
+
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
+
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.contents[this.sectionIndex].contents[this.index].name = inputName.value;
+                
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnDelete = document.createElement('button');
+        btnDelete.id = 'btnDelete';
+        btnDelete.innerHTML = 'Delete';
+        btnDelete.addEventListener('click', (event) => {
+            this.selfDelete();
+
+            divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnDelete);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
     }
 }
 
