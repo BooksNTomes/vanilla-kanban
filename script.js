@@ -373,16 +373,61 @@ class Section {
         sectionDetailsContainer.appendChild(sectionButtonContainer);
         
         // create section contents container
-        var sectionContentsContainer = document.createElement("div");
-        sectionContentsContainer.classList.add('section-content-container');
-        sectionContentsContainer.classList.add(`droppable-for-task`);
+        this.sectionContentsContainer = document.createElement("div");
+        this.sectionContentsContainer.classList.add('section-content-container');
+        this.sectionContentsContainer.classList.add(`SNo.${this.index}`)
+        this.sectionContentsContainer.classList.add(`droppable-for-task`);
+        this.sectionContentsContainer.addEventListener("dragover", (event) => {
+            event.preventDefault();
+
+            this.bottomTask = this.insertAboveTask(this.sectionContentsContainer, event.clientY);
+            this.draggingTask = document.querySelector(".is-dragging");
+            
+            if (!this.bottomTask){
+                this.sectionContentsContainer.appendChild(this.draggingTask);
+            } else {
+                this.sectionContentsContainer.insertBefore(this.draggingTask, this.bottomTask);
+            };
+        });
+        this.sectionContentsContainer.addEventListener("drop", (event) => {
+            event.preventDefault();
+
+            const draggingTaskSectionIndex = Number(this.draggingTask.classList[1].slice(4,));
+            const draggingTaskIndex = Number(this.draggingTask.classList[2].slice(4,));
+            const prevTaskIndex = draggingTaskIndex;
+
+            if (!this.bottomTask){
+                // Update Board JSON
+                // * Append to end
+                board.contents[this.index].contents.push(board.contents[draggingTaskSectionIndex].contents[draggingTaskIndex]);
+                // * Delete element at index
+                board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex, 1)
+
+                rerender();
+            } else {
+                // Update Board JSON
+                const bottomTaskIndex = Number(this.bottomTask.classList[2].slice(4,))
+                // * Append before bottom
+                board.contents[this.index].contents.splice(bottomTaskIndex, 0, board.contents[draggingTaskSectionIndex].contents[draggingTaskIndex]);
+                // * Delete element at index
+                if(bottomTaskIndex < draggingTaskIndex){
+                    board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex+1, 1)
+                }
+                else{
+                    board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex, 1)
+                }
+
+                rerender();
+            };
+        })
+
         for (var i = 0; i < this.contents.length; i++){
             var task = new Task(this.index, i, this.contents[i].name, this.contents[i].bgColor);
             var taskContainer = task.render()
-            sectionContentsContainer.appendChild(taskContainer);
+            this.sectionContentsContainer.appendChild(taskContainer);
         }
         sectionContainer.appendChild(sectionDetailsContainer);
-        sectionContainer.appendChild(sectionContentsContainer);
+        sectionContainer.appendChild(this.sectionContentsContainer);
         sectionContainer.appendChild(this.addTaskBtn);
 
         return sectionContainer;
@@ -397,6 +442,26 @@ class Section {
         const newTask = task
         this.contents.push(newTask);
     }
+
+    insertAboveTask(sectionContentsContainer, mouseY) {
+        const eventListener = sectionContentsContainer.querySelectorAll('.draggable-to-section:not(.is-dragging)');
+
+        var closestTask = null;
+        var closestOffset = Number.NEGATIVE_INFINITY;
+
+        eventListener.forEach((taskContainers) => {
+            const { top } = taskContainers.getBoundingClientRect();
+
+            const offset = mouseY - top;
+
+            if (offset < 0 && offset > closestOffset) {
+                closestOffset = offset;
+                closestTask = taskContainers;
+            };
+        });
+        return closestTask;
+    }
+
     // Delete
     pop(){
         this.contents.pop();
@@ -553,9 +618,18 @@ class Task {
         // create div section container
         var taskContainer = document.createElement("div");
         taskContainer.classList.add(`task-container`);
-        taskContainer.classList.add(`draggable-to-section`);
+        taskContainer.classList.add(`SNo.${this.sectionIndex}`)
+        taskContainer.classList.add(`TNo.${this.index}`)
         taskContainer.style.backgroundColor = this.bgColor;
         taskContainer.draggable = true;
+        
+        taskContainer.classList.add(`draggable-to-section`);
+        taskContainer.addEventListener('dragstart', () => {
+            taskContainer.classList.add('is-dragging');
+        });
+        taskContainer.addEventListener("dragend", () => {
+            taskContainer.classList.remove('is-dragging');
+        });
         
         // create child board details container
         var taskDetailsContainer = document.createElement("div");
@@ -685,10 +759,6 @@ function rerender(){
     const boardContainer = document.getElementById("divBoardContainer");
     boardContainer.parentNode.removeChild(boardContainer);
     renderBoardToMain(board.render());
-
-    setupDragAndDrop();
-    console.log(draggableToSection);
-    console.log(droppableForTask);
 }
 
 // Board Loading
@@ -707,63 +777,25 @@ function loadBoardDefaults(){
     return returnBoard
 } // -> Returns Default Board
 
-// Drag and Drop
-function setupDragAndDrop(){
-    draggableToSection = document.querySelectorAll('.draggable-to-section');
-    droppableForTask = document.querySelectorAll('.droppable-for-task');
+// // Drag and Drop
+// function insertAboveTask(section, mouseY) {
+//     const eventListener = section.querySelectorAll('.draggable-to-section:not(.is-dragging)');
 
-    
+//     var closestTask = null;
+//     var closestOffset = Number.NEGATIVE_INFINITY;
 
-    draggableToSection.forEach((task) => {
-        task.addEventListener('dragstart', () => {
-            task.classList.add('is-dragging');
-        });
-        task.addEventListener("dragend", () => {
-            task.classList.remove('is-dragging');
-        });
-    });
+//     eventListener.forEach((task) => {
+//         const { top } = task.getBoundingClientRect();
 
-    droppableForTask.forEach((section) => {
+//         const offset = mouseY - top;
 
-        section.addEventListener("dragover", (event) => {
-            event.preventDefault();
-
-            const bottomTask = insertAboveTask(section, event.clientY);
-            const draggingTask = document.querySelector(".is-dragging");
-
-            if (!bottomTask){
-                section.appendChild(draggingTask);
-                console.log(`Section Container: ${section} Task ${draggingTask}`);
-                // Update Board JSON
-
-            } else {
-                section.insertBefore(draggingTask, bottomTask);
-                console.log(`Section Container: ${section} Task ${draggingTask}`);
-                // Update Board JSON
-
-            };
-        });
-    });
-
-    function insertAboveTask(section, mouseY) {
-        const eventListener = section.querySelectorAll('.draggable-to-section:not(.is-dragging)');
-
-        var closestTask = null;
-        var closestOffset = Number.NEGATIVE_INFINITY;
-
-        eventListener.forEach((task) => {
-            const { top } = task.getBoundingClientRect();
-
-            const offset = mouseY - top;
-
-            if (offset < 0 && offset > closestOffset) {
-                closestOffset = offset;
-                closestTask = task;
-            };
-        });
-        return closestTask;
-    }
-}
+//         if (offset < 0 && offset > closestOffset) {
+//             closestOffset = offset;
+//             closestTask = task;
+//         };
+//     });
+//     return closestTask;
+// }
 
 // Main
 var board = load();
