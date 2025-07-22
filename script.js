@@ -11,7 +11,6 @@ function closeOverlay(){
     divOverlay.style.display = 'none';
 }
 
-
 // Templates
 function createDefaultBoard() {
     return {
@@ -361,21 +360,22 @@ class Section {
         // create child board details container
         var sectionDetailsContainer = document.createElement("div");
         sectionDetailsContainer.classList.add(`section-details-container`);
-
+        
         // board button container
         var sectionButtonContainer = document.createElement("div");
         sectionButtonContainer.classList.add(`section-btn-container`);
 
         // append button container children
         sectionButtonContainer.appendChild(this.configureSectionBtn);
-
+        
         // append board details container children
         sectionDetailsContainer.appendChild(this.sectionName);
         sectionDetailsContainer.appendChild(sectionButtonContainer);
-
+        
         // create section contents container
         var sectionContentsContainer = document.createElement("div");
         sectionContentsContainer.classList.add('section-content-container');
+        sectionContentsContainer.classList.add(`droppable-for-task`);
         for (var i = 0; i < this.contents.length; i++){
             var task = new Task(this.index, i, this.contents[i].name, this.contents[i].bgColor);
             var taskContainer = task.render()
@@ -553,6 +553,7 @@ class Task {
         // create div section container
         var taskContainer = document.createElement("div");
         taskContainer.classList.add(`task-container`);
+        taskContainer.classList.add(`draggable-to-section`);
         taskContainer.style.backgroundColor = this.bgColor;
         taskContainer.draggable = true;
         
@@ -684,6 +685,10 @@ function rerender(){
     const boardContainer = document.getElementById("divBoardContainer");
     boardContainer.parentNode.removeChild(boardContainer);
     renderBoardToMain(board.render());
+
+    setupDragAndDrop();
+    console.log(draggableToSection);
+    console.log(droppableForTask);
 }
 
 // Board Loading
@@ -702,17 +707,65 @@ function loadBoardDefaults(){
     return returnBoard
 } // -> Returns Default Board
 
-// * Configure Board
-// * Configure Section
-// * Configure Task
-function configurePopup(fields){
-}
+// Drag and Drop
+function setupDragAndDrop(){
+    draggableToSection = document.querySelectorAll('.draggable-to-section');
+    droppableForTask = document.querySelectorAll('.droppable-for-task');
 
-// * Drag and Drop
-function drag(){
-}
-function drop(){
+    
+
+    draggableToSection.forEach((task) => {
+        task.addEventListener('dragstart', () => {
+            task.classList.add('is-dragging');
+        });
+        task.addEventListener("dragend", () => {
+            task.classList.remove('is-dragging');
+        });
+    });
+
+    droppableForTask.forEach((section) => {
+
+        section.addEventListener("dragover", (event) => {
+            event.preventDefault();
+
+            const bottomTask = insertAboveTask(section, event.clientY);
+            const draggingTask = document.querySelector(".is-dragging");
+
+            if (!bottomTask){
+                section.appendChild(draggingTask);
+                console.log(`Section Container: ${section} Task ${draggingTask}`);
+                // Update Board JSON
+
+            } else {
+                section.insertBefore(draggingTask, bottomTask);
+                console.log(`Section Container: ${section} Task ${draggingTask}`);
+                // Update Board JSON
+
+            };
+        });
+    });
+
+    function insertAboveTask(section, mouseY) {
+        const eventListener = section.querySelectorAll('.draggable-to-section:not(.is-dragging)');
+
+        var closestTask = null;
+        var closestOffset = Number.NEGATIVE_INFINITY;
+
+        eventListener.forEach((task) => {
+            const { top } = task.getBoundingClientRect();
+
+            const offset = mouseY - top;
+
+            if (offset < 0 && offset > closestOffset) {
+                closestOffset = offset;
+                closestTask = task;
+            };
+        });
+        return closestTask;
+    }
 }
 
 // Main
 var board = load();
+var draggableToSection = document.querySelectorAll('.draggable-to-section');
+var droppableForTask = document.querySelectorAll('.droppable-for-task');
