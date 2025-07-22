@@ -51,6 +51,10 @@ class Board {
         this.newBoardBtn = this.createNewBoardBtn();
         this.addSectionBtn = this.createAddSectionBtn();
 
+        // Popups
+        this.uploadContainer = null;
+        this.configContainer = null;
+
         // Section List
         this.contents = contents
     }
@@ -173,15 +177,27 @@ class Board {
         element.id = 'btnOpenBoard';
         element.classList.add();
         element.innerHTML = `Open Board`;
-        element.addEventListener('click', (event) =>{
-            // this.openBoardState = this.openBoardState === 'closed' ? 'opened' : 'closed'       
-            // if (openBoardState  === 'opened') {
-            //     openUploadContainer()
-            // }   
-            // else {
-            //     closeUploadContainer()
-            // }
-        });
+        element.addEventListener('click', (event) => {
+            var uploadInput = document.createElement('input');
+            uploadInput.type = 'file';
+            uploadInput.id = 'fileInput';
+            uploadInput.accept = 'json';
+
+            uploadInput.addEventListener('change', (event) => {
+                const file = uploadInput.files[0];
+
+                if (file){
+                    const reader = new FileReader()
+                    reader.onload = function(event) {
+                        const data = JSON.parse(event.target.result);
+                        board = loadBoard(data);
+                        rerender();
+                    };
+                    reader.readAsText(file);  
+                }
+            })
+            uploadInput.click();
+        })
         return element;
     }
     createSaveBoardBtn(){
@@ -190,7 +206,13 @@ class Board {
         element.classList.add();
         element.innerHTML = `Save Board`;
         element.addEventListener('click', (event) =>{
-            // saveModelsToJSON('board.json', JSON.stringify(this.board))
+            const filename = "newBoard.json";
+            const text = JSON.stringify(this.board);
+
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+            element.click();
         });
         return element;
     }
@@ -204,13 +226,14 @@ class Board {
         });
         return element;
     }
-    createNewBoardBtn(){
+    createNewBoardBtn(){ // Clear board is a more accurate way of calling this
         var element = document.createElement("button");
         element.id = 'btnNewBoard';
         element.classList.add();
         element.innerHTML = `New Board`;
         element.addEventListener('click', (event) => {
-
+            board = loadBoardDefaults();
+            rerender();
         });
         return element;
     }
@@ -228,6 +251,17 @@ class Board {
             rerender();
         })
         return element;
+    }
+
+    // Config Container
+    createConfigContainer(){
+
+    }
+    showConfigContainer(){
+
+    }
+    closeConfigContainer(){
+        
     }
 
 }
@@ -403,7 +437,6 @@ class Task {
         const sectionsReference = board.contents;
         for (var i = 0; i < sectionsReference.length; i++){
             if (this.sectionIndex === sectionsReference[i].id) {
-                console.log(((board.contents)[i].contents));
                 ((board.contents)[i].contents).splice(this.index, 1);
                 rerender()
                 break
@@ -493,9 +526,9 @@ function rerender(){
 function loadBoard(data){
     if (data !== null){
         const returnBoard = new Board(data.name, data.bgColor1, data.bgColor2, data.contents)
-    }
-
+    
     return returnBoard
+    }
 } // -> Returns Loaded Board
 
 function loadBoardDefaults(){
@@ -504,62 +537,6 @@ function loadBoardDefaults(){
 
     return returnBoard
 } // -> Returns Default Board
-
-/* WIP */
-// JSON Operations
-function parseModelsToJSON(board){
-    return JSON.stringify(board.board)
-}
-
-function saveModelsToJSON(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-
-/* WIP */
-// Open Board Popup
-function openUploadContainer(){
-    var uploadInput = document.createElement('input')
-    uploadInput.type = 'file'
-    uploadInput.id = 'fileInput'
-    uploadInput.accept = 'json'
-
-    var uploadButton = document.createElement('button')
-    uploadButton.innerHTML = 'Open JSON'
-    uploadButton.addEventListener('click', (event) => {
-        console.log('clicked')
-        const file = uploadInput.files[0]
-        console.log(file)
-        
-        if (file){
-            const reader = new FileReader()
-            reader.onload = function(event) {
-                const data = JSON.parse(event.target.result);
-                console.log(data)
-                board = loadBoard(data)
-                rerender()
-                closeUploadContainer()
-            };
-            reader.readAsText(file)    
-        }
-    })
-    uploadContainer.appendChild(uploadInput)
-    uploadContainer.appendChild(uploadButton)
-}
-function closeUploadContainer(){
-    while(uploadContainer.children.length !== 0){
-        console.log((uploadContainer.children))
-        uploadContainer.removeChild((uploadContainer.children)[0])
-    }
-}
 
 // * Configure Board
 // * Configure Section
