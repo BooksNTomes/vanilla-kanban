@@ -777,27 +777,5 @@ function loadBoardDefaults(){
     return returnBoard
 } // -> Returns Default Board
 
-// // Drag and Drop
-// function insertAboveTask(section, mouseY) {
-//     const eventListener = section.querySelectorAll('.draggable-to-section:not(.is-dragging)');
-
-//     var closestTask = null;
-//     var closestOffset = Number.NEGATIVE_INFINITY;
-
-//     eventListener.forEach((task) => {
-//         const { top } = task.getBoundingClientRect();
-
-//         const offset = mouseY - top;
-
-//         if (offset < 0 && offset > closestOffset) {
-//             closestOffset = offset;
-//             closestTask = task;
-//         };
-//     });
-//     return closestTask;
-// }
-
 // Main
 var board = load();
-var draggableToSection = document.querySelectorAll('.draggable-to-section');
-var droppableForTask = document.querySelectorAll('.droppable-for-task');
