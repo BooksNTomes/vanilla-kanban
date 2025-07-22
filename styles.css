@@ -6,23 +6,41 @@
 }
 
 * {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    
     margin: 0;
     padding: 0;
-}
-
-/* Utility Styles */
-.border {
-    border-style: solid;
-    border-color: aqua;
 }
 
 body{
     background-color: black;
 }
 
-/* BGColor Styles */
+/* Debugging Styles */
+.border {
+    border-style: solid;
+    border-color: aqua;
+}
+
+
+/* BGColor Styles [TODO] */
 
 /* Button Styles */
+button{
+    background-color: white;
+    border: 1px solid hsla(0, 0%, 0%, 0.1);
+    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
+    border-radius: .5rem;
+
+    padding:.5rem;
+}
+button:hover{
+    background-color: hsl(0, 0%, 98%);
+}
+button:active{
+    background-color: hsl(0, 0%, 95%);
+}
 
 /* Font Styles */
 
@@ -39,29 +57,26 @@ header h1 {
     color: black;
     margin-left:4rem;
     margin-right:4rem;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 3rem;
 }
 
 header h1 span {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 3.2rem;
     color:hsl(17, 100%, 59%);
 }
 
-/**/
+/*Main*/
+/*JS: background-color === bgColor1*/
 main {
+    min-height:80vh;
+    background-color: white; 
     padding: 1rem 0em 1rem;
-    background-color: white;
 }
 
-/**/
+/*Board Container*/
 .board-container {
     display: flex;
     flex-direction: column;
-    
-    padding: 1rem;
-    min-height: 65vh;
 }
 .board-details-container {
     display:flex;
@@ -73,104 +88,46 @@ main {
     padding: 0rem 0rem 1rem;
 }
 .board-details-container h2 {
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 16px;
-}
-.board-details-container button {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: white;
-    border: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
-    border-radius: .5rem;
-
-    font-size: 12px;
-    padding:.5rem;
-}
-.board-details-container button:hover {
-    background-color: hsl(0, 0%, 98%);
-}
-.board-details-container button:active {
-    background-color: hsl(0, 0%, 95%);
 }
 .board-contents-container {
     display:flex;
     align-items: flex-start;
-    overflow: scroll;
+    overflow: scroll visible;
     
     margin-left: 4rem;
     margin-right: 4rem;
 }
 #btnAddSection {
-    padding:1rem 0rem 1rem;
-    font-size: 12px;
-    background-color: white;
-    border: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
-    border-radius: .5rem;
     margin-left:4rem;
     margin-right:4rem;
-}
-#btnAddSection:hover {
-    background-color: hsl(0, 0%, 98%);
-}
-#btnAddSection:active {
-    background-color: hsl(0, 0%, 95%);
+    padding:1rem 0rem 1rem;
 }
 
 /**/
 .section-container {
-    border-radius: 5px;
-    background-color: hsl(0, 0%, 100%);
-    color: hsla(0, 0%, 0%, 0.2);
-    box-shadow: 0px 2px 3px;
-    margin: 1rem;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
-    width: 25%;
-}
-.section-container button {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: white;
-    border: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
-    border-radius: .5rem;
 
-    font-size: 12px;
-    padding:.5rem;
-}
-.section-container button:hover {
-    background-color: hsl(0, 0%, 98%);
-}
-.section-container button:active {
-    background-color: hsl(0, 0%, 95%);
+    background-color: hsl(0, 0%, 100%);
+    color: hsla(0, 0%, 0%, 0.2);
+
+    box-shadow: 0px 2px 3px;
+    border-radius: 5px;
+    margin: 1rem;
+    padding: 1rem;
+    min-width: 250px;
+    max-width: 300px;
 }
 .section-details-container {
-    font-family:Arial, Helvetica, sans-serif;
-
-
-    color:black;
     display:flex;
     align-items: center;
     justify-content: space-between;
-}
-.section-details-container button {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: white;
-    border: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
-    border-radius: .5rem;
 
-    font-size: 12px;
-    padding:.5rem;
+    color:black;
 }
-.section-details-container button:hover {
-    background-color: hsl(0, 0%, 98%);
-}
-.section-details-container button:active {
-    background-color: hsl(0, 0%, 95%);
-}
+
 .section-content-container {
     padding: 1rem;
     display:flex;
@@ -181,42 +138,31 @@ main {
 
 /**/
 .task-container {
-    padding: 1rem;
-    border-radius: 5px;
     color: hsla(0, 0%, 0%, 0.2);
+    border-radius: 5px;
     box-shadow: 0px 2px 3px;
+    
     width:100%;
+    min-height: 75px;
     margin: .5rem;
+    padding: 1rem;
 }
 .task-details-container {
-    font-family:Arial, Helvetica, sans-serif;
+    display:flex;
+    align-items: left;
+    justify-content: space-between;
     
     color:black;
-    display:flex;
-    justify-content: space-between;
 }
 .task-details-container p {
-    font-size: 12px;
     overflow: hidden;
     overflow-wrap:break-word;
+    padding: 1rem 0rem 1rem;
 }
 .task-details-container button {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: white;
-    border: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-shadow: 0px 1px 1px hsla(0, 0%, 0%, 0.1);
-    border-radius: .5rem;
-
-    font-size: 12px;
-    padding:.5rem;
+    min-width:100px;
+    max-width:100px;
 }
-.task-details-container button:hover {
-    background-color: hsl(0, 0%, 98%);
-}
-.task-details-container button:active {
-    background-color: hsl(0, 0%, 95%);
-}
-
 /**/
 footer {
     padding: 1rem 0em 1rem;
@@ -226,7 +172,6 @@ footer {
 }
 
 footer h2 {
-    font-family: Arial, Helvetica, sans-serif;
     color: hsl(0, 0%, 100%);
     margin-left:4rem;
     margin-right:4rem;
