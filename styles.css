@@ -23,7 +23,7 @@ body{
     border-color: aqua;
 }
 
-/* BGColor Styles [TODO] */
+/* BGColor Styles */
 
 /* Button Styles */
 button{
@@ -46,7 +46,7 @@ button:active{
 /* Overlay for Popups*/
 #divOverlay{
     display: none;
-    background-color: hsla(0, 0%, 0%, 0.4); /* Black background with opacity */
+    background-color: hsla(0, 0%, 0%, 0.4);
 
     position: fixed;
     z-index: 3;
@@ -134,7 +134,7 @@ main {
     padding:1rem 0rem 1rem;
 }
 
-/**/
+/*Section Container*/
 .section-container {
     display: flex;
     flex-direction: column;
@@ -168,7 +168,7 @@ main {
 }
 
 
-/**/
+/*Task Container*/
 .task-container {
     color: hsla(0, 0%, 0%, 0.2);
     border-radius: 5px;
@@ -234,7 +234,7 @@ main {
     margin-left:auto;
 }
 
-/**/
+/*Footer*/
 footer {
     padding: 1rem 0em 1rem;
     background-color: black;

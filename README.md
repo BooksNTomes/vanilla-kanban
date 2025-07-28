@@ -23,3 +23,8 @@
 
 # Updates
 - The base features are complete, but additional features will be added overtime such as background color configuration, opening multiple boards, and code refactoring/redesign, and branches featuring different implementations (such as servers / database technologies / frameworks) may be done.
+
+# (Broad) References
+- Youtube tutorials for basic html/css/javascript syntax, and basis for drag-and-drop concepts/implementation.
+- W3schools for basic html/css/javascript syntax and concepts.
+- Duck.ai and internet searching for ideas on certain implementations (e.g. 'downloading/uploading' without server/node.js)
