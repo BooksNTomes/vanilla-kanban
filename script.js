@@ -70,7 +70,6 @@ class Board {
             this.name = name;
             this.setBoardName(name);
         }
-        /* WIP */
         // if (this.bgColor1 !== bgColor1) {
         //     this.bgColor1 = bgColor1;
         //     this.setBoardBgColor1(bgColor1);
@@ -134,9 +133,6 @@ class Board {
         boardContainer.appendChild(boardDetailsContainer);
         boardContainer.appendChild(this.addSectionBtn);
         boardContainer.appendChild(boardContentsContainer);
-
-        // // Only for prototyping, add this to main functions
-        // document.getElementById("main-container").appendChild(boardContainer)
 
         return boardContainer
     }
@@ -326,12 +322,12 @@ class Section {
         this.contents = contents;
     }
 
+    /* WIP */
     // Edit 
     set section([name, bgColor, contents]){
         if (this.name !== name && name !== null) {
             this.name = name;
         }
-        /* WIP */
         // if (this.bgColor !== bgColor) {
         //     this.bgColor = bgColor;
         // }
@@ -485,7 +481,6 @@ class Section {
         var element = document.getElementById('h4SectionName');
         element.innerHTML = `${name}`;
     }
-    /* WIP */
     createConfigureSectionBtn(){
         var element = document.createElement("button");
         element.id = 'configureSectionBtn';
@@ -582,6 +577,7 @@ class Task {
         this.configureTaskBtn = this.createConfigureTaskBtn();
     }
 
+    /* WIP */
     // Edit
     set task([name, bgColor]){
         if (this.name !== name && name !== null) {
@@ -667,7 +663,6 @@ class Task {
         element.innerHTML = `${name}`;
         return element;
     }
-    /* WIP */
     createConfigureTaskBtn(){
         var element = document.createElement("button");
         element.id = 'configureTaskBtn';
@@ -738,10 +733,6 @@ class Task {
 
         openOverlay();
     }
-}
-
-// CONCEPTUAL WIP - Non-Global-Variable Implementation
-function mainHandler(){  
 }
 
 // Loading and Rendering
