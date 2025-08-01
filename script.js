@@ -34,6 +34,113 @@ function createDefaultTask() {
     }
 }
 
+
+/* REFACTORING : Rewriting Classes
+Objectives:
+- Adding Parent References to access parent for editing
+- CRUD Function Rewrites
+- Moving on from using Global Variable for Update/Delete Functions
+
+BRAINSTORMING:
+    Understanding: Board, Section, Task, Etc. Classes serve for JSON -> Rendering 
+    Maybe we will:
+        - Rewrite Board, Section, Task, Etc. Classes
+            - We'll start with the generic objects first
+            - Then we'll make a Board Class that:
+                - takes the board object as its constructor parameter (old implementation: gets each attribute as constructor parameter)
+                - has a .json attribute containing the object parameter
+    // BUT how does it work for the child elements???
+    // We might have to make dedicated global functions not chained to each element?
+
+Upon review, it seems that the array update functions do work without calling the global variable? Internet consultation shows:
+    - Objects are passed by reference, so why not have all constructors be passed with the object itself?
+    - It fixes the parent reference issue
+    - It also fixes the crud functions
+    - And, it does not rely on global variable calling
+    - IT might solve EVERYTHING. I just need to implement it!
+*/
+
+/* Refactoring Classes:
+- Redo Constructor Implementation
+- Red Crud Functions
+Objective:
+- Avoid reliance on global variable calling for updating and deleting
+*/
+
+class BoardRefactored {
+    // create
+    constructor(board){
+        this.board = board;
+        this.domConstructor();
+    }
+    domConstructor(){
+        // board states
+        this.openBoardState = 'closed';
+        // board buttons
+        this.openBoardBtn = this.createOpenBoardBtn();
+        this.saveBoardBtn = this.createSaveBoardBtn();
+        this.configureBoardBtn = this.createConfigureBoardBtn();
+        this.newBoardBtn = this.createNewBoardBtn();
+        this.addSectionBtn = this.createAddSectionBtn();
+    }
+    // read / rendering functions
+    getJson(){
+        return this.board;
+    }
+    render(){
+        // boardContainer [Main Container]
+        var boardContainer = document.createElement("div");
+        boardContainer.id = `divBoardContainer`
+        boardContainer.classList.add(`board-container`);
+        boardContainer.style.backgroundColor = this.bgColor2;
+
+        // update configurable attributes (name etc.)
+        this.boardName = this.createBoardName(this.name);
+        
+        // boardDetailsContainer
+        var boardDetailsContainer = document.createElement("div");
+        boardDetailsContainer.classList.add(`board-details-container`);
+
+        // boardButtonContainer
+        var boardButtonContainer = document.createElement("div");
+        boardButtonContainer.classList.add(`board-btn-container`);
+
+        // append buttonContainer children
+        boardButtonContainer.appendChild(this.openBoardBtn);
+        boardButtonContainer.appendChild(this.saveBoardBtn);
+        boardButtonContainer.appendChild(this.configureBoardBtn);
+        boardButtonContainer.appendChild(this.newBoardBtn);
+        
+        // append boardDetailsContainer children
+        boardDetailsContainer.appendChild(this.boardName);
+        boardDetailsContainer.appendChild(boardButtonContainer);
+
+        // createBoardContentsContainer
+        var boardContentsContainer = document.createElement("div");
+        boardContentsContainer.classList.add('board-contents-container');
+        for (var i = 0; i < this.contents.length; i++){
+            var section = new Section(this.contents[i]);
+            var sectionContainer = section.render();
+            boardContentsContainer.appendChild(sectionContainer);
+        }
+        
+        // append boardContainer children
+        boardContainer.appendChild(boardDetailsContainer);
+        boardContainer.appendChild(this.addSectionBtn);
+        boardContainer.appendChild(boardContentsContainer);
+
+        return boardContainer
+    }
+    // Update Functions
+
+    // Delete Functions
+    
+}
+
+
+
+
+
 // Classes
 class Board {
     // Create
@@ -525,7 +632,7 @@ class Section {
         btnSave.addEventListener('click', (event) => {
             if (inputName.value !== '') {
                 board.contents[this.index].name = inputName.value;
-                
+                // this.sectionLabel = inputName.value;
                 divPopup.parentNode.removeChild(divPopup);
                 closeOverlay();
                 rerender();
