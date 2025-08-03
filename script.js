@@ -83,6 +83,7 @@ class BoardRefactored {
         this.newBoardBtn = this.createNewBoardBtn();
         this.addSectionBtn = this.createAddSectionBtn();
     }
+    
     // read / rendering functions
     getJson(){
         return this.board;
@@ -92,8 +93,9 @@ class BoardRefactored {
         var boardContainer = document.createElement("div");
         boardContainer.id = `divBoardContainer`
         boardContainer.classList.add(`board-container`);
-        boardContainer.style.backgroundColor = this.bgColor2;
-
+        this.setBoardBgColor1(this.bgColor1);
+        this.setBoardBgColor2(this.bgColor2);
+        
         // update configurable attributes (name etc.)
         this.boardName = this.createBoardName(this.name);
         
@@ -114,7 +116,7 @@ class BoardRefactored {
         // append boardDetailsContainer children
         boardDetailsContainer.appendChild(this.boardName);
         boardDetailsContainer.appendChild(boardButtonContainer);
-
+        
         // createBoardContentsContainer
         var boardContentsContainer = document.createElement("div");
         boardContentsContainer.classList.add('board-contents-container');
@@ -128,13 +130,180 @@ class BoardRefactored {
         boardContainer.appendChild(boardDetailsContainer);
         boardContainer.appendChild(this.addSectionBtn);
         boardContainer.appendChild(boardContentsContainer);
-
+        
         return boardContainer
     }
-    // Update Functions
-
-    // Delete Functions
     
+    // update
+    update(parameters){
+        // Check each parameter
+        // IF A !== B and A !== '' / null / undefined -> Update
+    }
+    insertSection(index, section){
+        this.contents.splice(index, 0, section)
+    }
+    pushSection(section){
+        const newSection = section
+        this.contents.push(newSection)
+    }
+    
+    // delete
+    popSection(){
+        this.contents.pop()
+    }
+    removeSection(index){
+        this.contents.splice(index, 1)
+    }
+
+    // elements
+    createBoardName(name){
+        var element = document.createElement("h2");
+        element.id = 'h2CurrentBoard';
+        element.innerHTML = `Current board: ${name}`;
+        return element;
+    }
+    setBoardName(name){
+        var element = document.getElementById('h2CurrentBoard');
+        element.innerHTML = `Current board: ${name}`;
+    }
+    setBoardBgColor1(bgColor1){
+        var element = document.getElementById('header');
+        element.backgroundColor = bgColor1;
+    }
+    setBoardBgColor2(bgColor2){
+        var element = document.getElementById('divBoardContainer');
+        element.backgroundColor = bgColor2;
+    }
+
+    // Todo Onclick Functions
+    createOpenBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnOpenBoard';
+        element.classList.add();
+        element.innerHTML = `Open Board`;
+        element.addEventListener('click', (event) => {
+            var uploadInput = document.createElement('input');
+            uploadInput.type = 'file';
+            uploadInput.id = 'fileInput';
+            uploadInput.accept = 'json';
+
+            uploadInput.addEventListener('change', (event) => {
+                const file = uploadInput.files[0];
+
+                if (file){
+                    const reader = new FileReader()
+                    reader.onload = function(event) {
+                        const data = JSON.parse(event.target.result);
+                        board = loadBoard(data);
+                        rerender();
+                    };
+                    reader.readAsText(file);  
+                }
+            })
+            uploadInput.click();
+        })
+        return element;
+    }
+    createSaveBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnSaveBoard';
+        element.classList.add();
+        element.innerHTML = `Save Board`;
+        element.addEventListener('click', (event) =>{
+            const filename = "newBoard.json";
+            const text = JSON.stringify(this.board);
+
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+            element.click();
+        });
+        return element;
+    }
+    createConfigureBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnConfigureBoard';
+        element.classList.add();
+        element.innerHTML = `Configure Board`;
+        element.addEventListener('click', (event) =>{
+            this.openConfig();
+        });
+        return element;
+    }
+    createNewBoardBtn(){ // Clear board is a more accurate way of calling this
+        var element = document.createElement("button");
+        element.id = 'btnNewBoard';
+        element.classList.add();
+        element.innerHTML = `New Board`;
+        element.addEventListener('click', (event) => {
+            board = loadBoardDefaults();
+            rerender();
+        });
+        return element;
+    }
+    createAddSectionBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnAddSection';
+        element.classList.add();
+        element.innerHTML = `Add Section`;
+        element.addEventListener('click', (event) => {
+
+            var params = createDefaultSection();
+            params.id = board.contents.length;
+
+            this.pushSection(params);
+            rerender();
+        })
+        return element;
+    }
+
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
+
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
+
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
+
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.name = inputName.value;
+                
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
+    }
 }
 
 
