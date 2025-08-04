@@ -72,6 +72,13 @@ class BoardRefactored {
     constructor(board){
         this.board = board;
         this.domConstructor();
+
+        // add parent json references
+        if (this.contents !== undefined && Array.isArray(this.contents)){
+            this.contents.forEach(content => {
+                content.board = this;
+            });
+        }
     }
     domConstructor(){
         // board states
@@ -84,7 +91,95 @@ class BoardRefactored {
         this.addSectionBtn = this.createAddSectionBtn();
     }
     
-    // read / rendering functions
+    createBoardName(name){
+        var element = document.createElement("h2");
+        element.id = 'h2CurrentBoard';
+        element.innerHTML = `Current board: ${name}`;
+        return element;
+    }
+
+    createOpenBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnOpenBoard';
+        element.classList.add();
+        element.innerHTML = `Open Board`;
+        element.addEventListener('click', (event) => {
+            var uploadInput = document.createElement('input');
+            uploadInput.type = 'file';
+            uploadInput.id = 'fileInput';
+            uploadInput.accept = 'json';
+
+            uploadInput.addEventListener('change', (event) => {
+                const file = uploadInput.files[0];
+
+                if (file){
+                    const reader = new FileReader()
+                    reader.onload = function(event) {
+                        const data = JSON.parse(event.target.result);
+                        this.board = loadBoard(data);
+                        rerender();
+                    };
+                    reader.readAsText(file);  
+                }
+            })
+            uploadInput.click();
+        })
+        return element;
+    }
+    createSaveBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnSaveBoard';
+        element.classList.add();
+        element.innerHTML = `Save Board`;
+        element.addEventListener('click', (event) =>{
+            const filename = "newBoard.json";
+            const text = JSON.stringify(this.board);
+
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+            element.click();
+        });
+        return element;
+    }
+    createConfigureBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnConfigureBoard';
+        element.classList.add();
+        element.innerHTML = `Configure Board`;
+        element.addEventListener('click', (event) =>{
+            this.openConfig();
+        });
+        return element;
+    }
+    createNewBoardBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnNewBoard';
+        element.classList.add();
+        element.innerHTML = `New Board`;
+        element.addEventListener('click', (event) => {
+            this.board = loadBoardDefaults();
+            rerender();
+        });
+        return element;
+    }
+    createAddSectionBtn(){
+        var element = document.createElement("button");
+        element.id = 'btnAddSection';
+        element.classList.add();
+        element.innerHTML = `Add Section`;
+        element.addEventListener('click', (event) => {
+
+            var params = createDefaultSection();
+            params.id = this.board.contents.length;
+
+            this.pushSection(params);
+            rerender();
+        })
+        return element;
+    }
+    
+    // read
     getJson(){
         return this.board;
     }
@@ -135,33 +230,13 @@ class BoardRefactored {
     }
     
     // update
-    update(parameters){
-        // Check each parameter
-        // IF A !== B and A !== '' / null / undefined -> Update
-    }
     insertSection(index, section){
-        this.contents.splice(index, 0, section)
+        this.board.contents.splice(index, 0, section)
     }
     pushSection(section){
-        const newSection = section
-        this.contents.push(newSection)
-    }
-    
-    // delete
-    popSection(){
-        this.contents.pop()
-    }
-    removeSection(index){
-        this.contents.splice(index, 1)
+        this.board.contents.push(section)
     }
 
-    // elements
-    createBoardName(name){
-        var element = document.createElement("h2");
-        element.id = 'h2CurrentBoard';
-        element.innerHTML = `Current board: ${name}`;
-        return element;
-    }
     setBoardName(name){
         var element = document.getElementById('h2CurrentBoard');
         element.innerHTML = `Current board: ${name}`;
@@ -174,95 +249,12 @@ class BoardRefactored {
         var element = document.getElementById('divBoardContainer');
         element.backgroundColor = bgColor2;
     }
-
-    // Todo Onclick Functions
-    createOpenBoardBtn(){
-        var element = document.createElement("button");
-        element.id = 'btnOpenBoard';
-        element.classList.add();
-        element.innerHTML = `Open Board`;
-        element.addEventListener('click', (event) => {
-            var uploadInput = document.createElement('input');
-            uploadInput.type = 'file';
-            uploadInput.id = 'fileInput';
-            uploadInput.accept = 'json';
-
-            uploadInput.addEventListener('change', (event) => {
-                const file = uploadInput.files[0];
-
-                if (file){
-                    const reader = new FileReader()
-                    reader.onload = function(event) {
-                        const data = JSON.parse(event.target.result);
-                        board = loadBoard(data);
-                        rerender();
-                    };
-                    reader.readAsText(file);  
-                }
-            })
-            uploadInput.click();
-        })
-        return element;
-    }
-    createSaveBoardBtn(){
-        var element = document.createElement("button");
-        element.id = 'btnSaveBoard';
-        element.classList.add();
-        element.innerHTML = `Save Board`;
-        element.addEventListener('click', (event) =>{
-            const filename = "newBoard.json";
-            const text = JSON.stringify(this.board);
-
-            var element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-            element.setAttribute('download', filename);
-            element.click();
-        });
-        return element;
-    }
-    createConfigureBoardBtn(){
-        var element = document.createElement("button");
-        element.id = 'btnConfigureBoard';
-        element.classList.add();
-        element.innerHTML = `Configure Board`;
-        element.addEventListener('click', (event) =>{
-            this.openConfig();
-        });
-        return element;
-    }
-    createNewBoardBtn(){ // Clear board is a more accurate way of calling this
-        var element = document.createElement("button");
-        element.id = 'btnNewBoard';
-        element.classList.add();
-        element.innerHTML = `New Board`;
-        element.addEventListener('click', (event) => {
-            board = loadBoardDefaults();
-            rerender();
-        });
-        return element;
-    }
-    createAddSectionBtn(){
-        var element = document.createElement("button");
-        element.id = 'btnAddSection';
-        element.classList.add();
-        element.innerHTML = `Add Section`;
-        element.addEventListener('click', (event) => {
-
-            var params = createDefaultSection();
-            params.id = board.contents.length;
-
-            this.pushSection(params);
-            rerender();
-        })
-        return element;
-    }
-
     openConfig(){
         var divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
         var pNameLabel = document.createElement('p');
-        pNameLabel.innerHTML = `Current name: ${this.name}`
+        pNameLabel.innerHTML = `Current name: ${this.board.name}`
 
         var inputName = document.createElement('input');
         inputName.type = 'text';
@@ -277,7 +269,7 @@ class BoardRefactored {
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
             if (inputName.value !== '') {
-                board.name = inputName.value;
+                this.board.name = inputName.value;
                 
                 divPopup.parentNode.removeChild(divPopup);
                 closeOverlay();
@@ -304,9 +296,408 @@ class BoardRefactored {
 
         openOverlay();
     }
+    
+    // delete
+    popSection(){
+        this.board.contents.pop()
+    }
+    removeSection(section){
+        this.board.contents.remove(section);
+    }
 }
 
+class SectionRefactored {
+    // create
+    constructor(section){
+        this.section = section;
+        this.domConstructor();
 
+        // add parent json references
+        if (this.contents !== undefined && Array.isArray(this.contents)){
+            this.contents.forEach(content => {
+                content.section = this.section;
+            });
+        }
+    }
+    domConstructor(){
+        this.configureSectionBtn = this.createConfigureSectionBtn();
+        this.addTaskBtn = this.createAddTaskBtn();
+    }
+
+    createSectionName(name){
+        var element = document.createElement("h4");
+        element.id = 'h4SectionName';
+        element.innerHTML = `${name}`;
+        return element;
+    }
+    createAddTaskBtn(){
+        var element = document.createElement("button");
+        element.id = 'addTaskBtn';
+        element.classList.add();
+        element.innerHTML = `Add Task`;
+        element.addEventListener('click', () => {
+            var params = createDefaultTask();
+            this.pushTask(params);
+            rerender()
+        })
+        return element;
+    }
+    createConfigureSectionBtn(){
+        var element = document.createElement("button");
+        element.id = 'configureSectionBtn';
+        element.classList.add();
+        element.innerHTML = `Configure Section`;
+        element.addEventListener('click', (event) => {
+            this.openConfig();
+        })
+        return element;
+    }
+
+    // read
+    getJson(){
+        return this.section;
+    }
+    render(){
+        // create div section container
+        var sectionContainer = document.createElement("div");
+        sectionContainer.classList.add(`section-container`);
+        sectionContainer.style.backgroundColor = this.bgColor;
+        
+        // create child board details container
+        var sectionDetailsContainer = document.createElement("div");
+        sectionDetailsContainer.classList.add(`section-details-container`);
+        
+        // board button container
+        var sectionButtonContainer = document.createElement("div");
+        sectionButtonContainer.classList.add(`section-btn-container`);
+
+        // append button container children
+        sectionButtonContainer.appendChild(this.configureSectionBtn);
+        
+        // append board details container children
+        sectionDetailsContainer.appendChild(this.sectionName);
+        sectionDetailsContainer.appendChild(sectionButtonContainer);
+        
+        // create section contents container
+        this.sectionContentsContainer = document.createElement("div");
+        this.sectionContentsContainer.classList.add('section-content-container');
+        this.sectionContentsContainer.classList.add(`SNo.${this.index}`)
+        this.sectionContentsContainer.classList.add(`droppable-for-task`);
+        this.sectionContentsContainer.addEventListener("dragover", (event) => {
+            event.preventDefault();
+
+            this.bottomTask = this.insertAboveTask(this.sectionContentsContainer, event.clientY);
+            this.draggingTask = document.querySelector(".is-dragging");
+            
+            if (!this.bottomTask){
+                this.sectionContentsContainer.appendChild(this.draggingTask);
+            } else {
+                this.sectionContentsContainer.insertBefore(this.draggingTask, this.bottomTask);
+            };
+        });
+        this.sectionContentsContainer.addEventListener("drop", (event) => {
+            event.preventDefault();
+
+            const draggingTaskSectionIndex = Number(this.draggingTask.classList[1].slice(4,));
+            const draggingTaskIndex = Number(this.draggingTask.classList[2].slice(4,));
+            const prevTaskIndex = draggingTaskIndex;
+
+            if (!this.bottomTask){
+                // Update Board JSON
+                // * Append to end
+                board.contents[this.index].contents.push(board.contents[draggingTaskSectionIndex].contents[draggingTaskIndex]);
+                // * Delete element at index
+                board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex, 1)
+
+                rerender();
+            } else {
+                // Update Board JSON
+                const bottomTaskIndex = Number(this.bottomTask.classList[2].slice(4,))
+                // * Append before bottom
+                board.contents[this.index].contents.splice(bottomTaskIndex, 0, board.contents[draggingTaskSectionIndex].contents[draggingTaskIndex]);
+                // * Delete element at index
+                if(bottomTaskIndex < draggingTaskIndex){
+                    board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex+1, 1)
+                }
+                else{
+                    board.contents[draggingTaskSectionIndex].contents.splice(draggingTaskIndex, 1)
+                }
+
+                rerender();
+            };
+        })
+
+        for (var i = 0; i < this.contents.length; i++){
+            var task = new Task(this.contents[i]);
+            var taskContainer = task.render()
+            this.sectionContentsContainer.appendChild(taskContainer);
+        }
+        sectionContainer.appendChild(sectionDetailsContainer);
+        sectionContainer.appendChild(this.sectionContentsContainer);
+        sectionContainer.appendChild(this.addTaskBtn);
+
+        return sectionContainer;   
+    }
+
+    // update
+    insert(index, task){
+        this.contents.splice(index, 0, task);
+    }
+    insertAboveTask(sectionContentsContainer, mouseY) {
+        const eventListener = sectionContentsContainer.querySelectorAll('.draggable-to-section:not(.is-dragging)');
+
+        var closestTask = null;
+        var closestOffset = Number.NEGATIVE_INFINITY;
+
+        eventListener.forEach((taskContainers) => {
+            const { top } = taskContainers.getBoundingClientRect();
+
+            const offset = mouseY - top;
+
+            if (offset < 0 && offset > closestOffset) {
+                closestOffset = offset;
+                closestTask = taskContainers;
+            };
+        });
+        return closestTask;
+    }
+    pushTask(task){
+        const newTask = task
+        this.contents.push(newTask);
+    }
+
+    setSectionName(name){
+        var element = document.getElementById('h4SectionName');
+        element.innerHTML = `${name}`;
+    }
+    setSectionBgColor(bgColor){
+        // var element = document.getElementById('divSectionContainer');
+        // element.backgroundColor = bgColor1;
+    }
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
+
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
+
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
+
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.contents[this.index].name = inputName.value;
+                // this.sectionLabel = inputName.value;
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnDelete = document.createElement('button');
+        btnDelete.id = 'btnDelete';
+        btnDelete.innerHTML = 'Delete';
+        btnDelete.addEventListener('click', (event) => {
+            this.selfDelete();
+
+            divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnDelete);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
+    }
+    
+    // delete
+    popTask(){
+        this.section.contents.pop();
+    }
+    removeTask(task){
+        this.section.contents.remove(task);
+    }
+    removeSelf(){
+        this.board.remove(this.section)
+        rerender()
+    }
+}
+
+class TaskRefactored{
+    // create
+    constructor(task){
+        this.task = task;
+        this.domConstructor();
+    }
+    domConstructor(){
+        this.taskName = this.createTaskName(name);
+        this.configureTaskBtn = this.createConfigureTaskBtn();
+    }
+
+    createTaskName(name){
+        var element = document.createElement("p");
+        element.id = 'taskname';
+        element.innerHTML = `${this.task.name}`;
+        return element;
+    }
+    createConfigureTaskBtn(){
+        var element = document.createElement("button");
+        element.id = 'configureTaskBtn';
+        element.classList.add();
+        element.innerHTML = `Configure Task`;
+        element.addEventListener('click', (event) => {
+            this.openConfig()
+        })
+        return element;
+    }
+
+    // read
+    getJSON(){
+        return this.task;
+    }
+    render(){
+        // create div section container
+        var taskContainer = document.createElement("div");
+        taskContainer.classList.add(`task-container`);
+        taskContainer.classList.add(`SNo.${this.sectionIndex}`)
+        taskContainer.classList.add(`TNo.${this.index}`)
+        taskContainer.style.backgroundColor = this.bgColor;
+        taskContainer.draggable = true;
+        
+        taskContainer.classList.add(`draggable-to-section`);
+        taskContainer.addEventListener('dragstart', () => {
+            taskContainer.classList.add('is-dragging');
+        });
+        taskContainer.addEventListener("dragend", () => {
+            taskContainer.classList.remove('is-dragging');
+        });
+        
+        // create child board details container
+        var taskDetailsContainer = document.createElement("div");
+        taskDetailsContainer.classList.add(`task-details-container`);
+
+        // board button container
+        var taskButtonContainer = document.createElement("div");
+        taskButtonContainer.classList.add(`task-btn-container`);
+
+        // append button container children
+        taskButtonContainer.appendChild(this.configureTaskBtn);
+
+        // append board details container children
+        taskDetailsContainer.appendChild(this.taskName);
+        taskDetailsContainer.appendChild(taskButtonContainer);
+
+        // create section contents container
+        var taskContentsContainer = document.createElement("div");
+        taskContentsContainer.classList.add('task-contents-container');
+        for (var i = 0; i < this.contents.length; i++){
+            var task = Task(this.contents[i]);
+            taskContentsContainer.appendChild(task);
+        }
+        taskContainer.appendChild(taskDetailsContainer);
+        taskContainer.appendChild(taskContentsContainer);
+
+        return taskContainer;
+    }
+
+    // update
+    setTaskName(){
+        var element = document.getElementById('taskname');
+        element.innerHTML = `${this.task.name}`;
+    }
+    setTaskBgColor(bgColor){
+        // var element = document.getElementById('divSectionContainer');
+        // element.backgroundColor = bgColor1;
+    }
+    openConfig(){
+        var divPopup = document.createElement('div');
+        divPopup.classList.add('popup-container');
+
+        var pNameLabel = document.createElement('p');
+        pNameLabel.innerHTML = `Current name: ${this.name}`
+
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.id = 'inputText'
+        inputName.placeholder = 'new name'
+
+        var divPopupBtnContainer = document.createElement('div');
+        divPopupBtnContainer.classList.add('popup-btn-container');
+
+        var btnSave = document.createElement('button');
+        btnSave.id = 'btnSave';
+        btnSave.innerHTML = 'Save'
+        btnSave.addEventListener('click', (event) => {
+            if (inputName.value !== '') {
+                board.contents[this.sectionIndex].contents[this.index].name = inputName.value;
+                
+                divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+            }
+        })
+
+        var btnDelete = document.createElement('button');
+        btnDelete.id = 'btnDelete';
+        btnDelete.innerHTML = 'Delete';
+        btnDelete.addEventListener('click', (event) => {
+            this.selfDelete();
+
+            divPopup.parentNode.removeChild(divPopup);
+                closeOverlay();
+                rerender();
+        })
+
+        var btnClose = document.createElement('button');
+        btnClose.id = 'btnClose';
+        btnClose.innerHTML = 'Close'
+        btnClose.addEventListener('click', (event) => {
+            divPopup.parentNode.removeChild(divPopup);
+            closeOverlay();
+        })
+
+        divPopupBtnContainer.appendChild(btnSave);
+        divPopupBtnContainer.appendChild(btnDelete);
+        divPopupBtnContainer.appendChild(btnClose);
+
+        divPopup.appendChild(pNameLabel);
+        divPopup.appendChild(inputName);
+        divPopup.appendChild(divPopupBtnContainer);
+
+        document.getElementById('divMainContainer').appendChild(divPopup);
+
+        openOverlay();
+    }
+
+    // delete
+    selfDelete(){
+        this.section.remove(this.task);
+    }
+}
 
 
 
@@ -592,8 +983,7 @@ class Section {
 
         // Elements
         this.sectionName = this.createSectionName(this.name);
-        this.configureSectionBtn = this.createConfigureSectionBtn();
-        this.addTaskBtn = this.createAddTaskBtn();
+        
 
         this.contents = contents;
     }
