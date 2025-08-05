@@ -73,22 +73,67 @@ class BoardRefactored {
         this.board = board;
         this.domConstructor();
 
-        // add parent json references
+        // add parent container references
         if (this.contents !== undefined && Array.isArray(this.contents)){
             this.contents.forEach(content => {
-                content.board = this;
+                content.board = this.board.contents;
             });
         }
     }
     domConstructor(){
         // board states
-        this.openBoardState = 'closed';
+        this.openBoardState = 'closed';                             // to review
+
         // board buttons
         this.openBoardBtn = this.createOpenBoardBtn();
         this.saveBoardBtn = this.createSaveBoardBtn();
         this.configureBoardBtn = this.createConfigureBoardBtn();
         this.newBoardBtn = this.createNewBoardBtn();
         this.addSectionBtn = this.createAddSectionBtn();
+        
+        // containers
+        // boardContainer [Main Container]
+        this.boardContainer = document.createElement("div");
+        this.boardContainer.id = `divBoardContainer`
+        this.boardContainer.classList.add(`board-container`);
+        this.setBoardBgColor1(this.board.bgColor1);
+        this.setBoardBgColor2(this.board.bgColor2);
+        
+        // update configurable attributes (name etc.)
+        this.boardName = this.createBoardName(this.board.name);
+        // ...
+        
+        // boardDetailsContainer
+        this.boardDetailsContainer = document.createElement("div");
+        this.boardDetailsContainer.classList.add(`board-details-container`);
+
+        // boardButtonContainer
+        this.boardButtonContainer = document.createElement("div");
+        this.boardButtonContainer.classList.add(`board-btn-container`);
+
+        // append buttonContainer children
+        this.boardButtonContainer.appendChild(this.openBoardBtn);
+        this.boardButtonContainer.appendChild(this.saveBoardBtn);
+        this.boardButtonContainer.appendChild(this.configureBoardBtn);
+        this.boardButtonContainer.appendChild(this.newBoardBtn);
+        
+        // append boardDetailsContainer children
+        this.boardDetailsContainer.appendChild(this.boardName);
+        this.boardDetailsContainer.appendChild(this.boardButtonContainer);
+        
+        // createBoardContentsContainer
+        this.boardContentsContainer = document.createElement("div");
+        this.boardContentsContainer.classList.add('board-contents-container');
+        for (var i = 0; i < this.contents.length; i++){
+            var section = new Section(this.contents[i]);
+            var sectionContainer = section.render();
+            this.boardContentsContainer.appendChild(sectionContainer);
+        }
+        
+        // append boardContainer children
+        this.boardContainer.appendChild(boardDetailsContainer);
+        this.boardContainer.appendChild(this.addSectionBtn);
+        this.boardContainer.appendChild(boardContentsContainer);
     }
     
     createBoardName(name){
@@ -184,49 +229,9 @@ class BoardRefactored {
         return this.board;
     }
     render(){
-        // boardContainer [Main Container]
-        var boardContainer = document.createElement("div");
-        boardContainer.id = `divBoardContainer`
-        boardContainer.classList.add(`board-container`);
-        this.setBoardBgColor1(this.bgColor1);
-        this.setBoardBgColor2(this.bgColor2);
-        
-        // update configurable attributes (name etc.)
-        this.boardName = this.createBoardName(this.name);
-        
-        // boardDetailsContainer
-        var boardDetailsContainer = document.createElement("div");
-        boardDetailsContainer.classList.add(`board-details-container`);
+        this.domConstructor();
 
-        // boardButtonContainer
-        var boardButtonContainer = document.createElement("div");
-        boardButtonContainer.classList.add(`board-btn-container`);
-
-        // append buttonContainer children
-        boardButtonContainer.appendChild(this.openBoardBtn);
-        boardButtonContainer.appendChild(this.saveBoardBtn);
-        boardButtonContainer.appendChild(this.configureBoardBtn);
-        boardButtonContainer.appendChild(this.newBoardBtn);
-        
-        // append boardDetailsContainer children
-        boardDetailsContainer.appendChild(this.boardName);
-        boardDetailsContainer.appendChild(boardButtonContainer);
-        
-        // createBoardContentsContainer
-        var boardContentsContainer = document.createElement("div");
-        boardContentsContainer.classList.add('board-contents-container');
-        for (var i = 0; i < this.contents.length; i++){
-            var section = new Section(this.contents[i]);
-            var sectionContainer = section.render();
-            boardContentsContainer.appendChild(sectionContainer);
-        }
-        
-        // append boardContainer children
-        boardContainer.appendChild(boardDetailsContainer);
-        boardContainer.appendChild(this.addSectionBtn);
-        boardContainer.appendChild(boardContentsContainer);
-        
-        return boardContainer
+        return boardContainer;
     }
     
     // update
@@ -237,18 +242,26 @@ class BoardRefactored {
         this.board.contents.push(section)
     }
 
-    setBoardName(name){
+    // Note: it seems that most is at the openConfig Function. After all, after setting things, we rerender resulting in an updated dom.
+    setBoardName(name){                                             // to review; might be deprecated
         var element = document.getElementById('h2CurrentBoard');
         element.innerHTML = `Current board: ${name}`;
     }
-    setBoardBgColor1(bgColor1){
+    setBoardBgColor1(bgColor1){                                     // to review; might be deprecated
         var element = document.getElementById('header');
         element.backgroundColor = bgColor1;
     }
-    setBoardBgColor2(bgColor2){
+    setBoardBgColor2(bgColor2){                                     // to review; might be deprecated
         var element = document.getElementById('divBoardContainer');
         element.backgroundColor = bgColor2;
     }
+
+    setBoardNameElement(){}
+    setBoardBgColor1Element(){}
+    setBoardBgColor2Element(){}
+
+    // TODO : deconstruct config with creating setter elements
+    // TODO : find a way to deconstruct the saving/updating of the board parameters
     openConfig(){
         var divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
