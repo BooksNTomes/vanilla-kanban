@@ -124,9 +124,9 @@ class BoardRefactored {
         // createBoardContentsContainer
         this.boardContentsContainer = document.createElement("div");
         this.boardContentsContainer.classList.add('board-contents-container');
-        for (var i = 0; i < this.contents.length; i++){
-            var section = new Section(this.contents[i]);
-            var sectionContainer = section.render();
+        for (let i = 0; i < this.contents.length; i++){
+            let section = new Section(this.contents[i]);
+            let sectionContainer = section.render();
             this.boardContentsContainer.appendChild(sectionContainer);
         }
         
@@ -137,19 +137,19 @@ class BoardRefactored {
     }
     
     createBoardName(name){
-        var element = document.createElement("h2");
+        let element = document.createElement("h2");
         element.id = 'h2CurrentBoard';
         element.innerHTML = `Current board: ${name}`;
         return element;
     }
 
     createOpenBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnOpenBoard';
         element.classList.add();
         element.innerHTML = `Open Board`;
         element.addEventListener('click', (event) => {
-            var uploadInput = document.createElement('input');
+            let uploadInput = document.createElement('input');
             uploadInput.type = 'file';
             uploadInput.id = 'fileInput';
             uploadInput.accept = 'json';
@@ -172,7 +172,7 @@ class BoardRefactored {
         return element;
     }
     createSaveBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnSaveBoard';
         element.classList.add();
         element.innerHTML = `Save Board`;
@@ -180,7 +180,7 @@ class BoardRefactored {
             const filename = "newBoard.json";
             const text = JSON.stringify(this.board);
 
-            var element = document.createElement('a');
+            let element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
             element.setAttribute('download', filename);
             element.click();
@@ -188,7 +188,7 @@ class BoardRefactored {
         return element;
     }
     createConfigureBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnConfigureBoard';
         element.classList.add();
         element.innerHTML = `Configure Board`;
@@ -198,7 +198,7 @@ class BoardRefactored {
         return element;
     }
     createNewBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnNewBoard';
         element.classList.add();
         element.innerHTML = `New Board`;
@@ -209,13 +209,13 @@ class BoardRefactored {
         return element;
     }
     createAddSectionBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnAddSection';
         element.classList.add();
         element.innerHTML = `Add Section`;
         element.addEventListener('click', (event) => {
 
-            var params = createDefaultSection();
+            let params = createDefaultSection();
             params.id = this.board.contents.length;
 
             this.pushSection(params);
@@ -242,55 +242,59 @@ class BoardRefactored {
         this.board.contents.push(section)
     }
 
-    // Note: it seems that most is at the openConfig Function. After all, after setting things, we rerender resulting in an updated dom.
-    setBoardName(name){                                             // to review; might be deprecated
-        var element = document.getElementById('h2CurrentBoard');
-        element.innerHTML = `Current board: ${name}`;
-    }
-    setBoardBgColor1(bgColor1){                                     // to review; might be deprecated
-        var element = document.getElementById('header');
-        element.backgroundColor = bgColor1;
-    }
-    setBoardBgColor2(bgColor2){                                     // to review; might be deprecated
-        var element = document.getElementById('divBoardContainer');
-        element.backgroundColor = bgColor2;
-    }
+    // // Note: it seems that most is at the openConfig Function. After all, after setting things, we rerender resulting in an updated dom.
+    // setBoardName(name){                                             // to review; might be deprecated
+    //     let element = document.getElementById('h2CurrentBoard');
+    //     element.innerHTML = `Current board: ${name}`;
+    // }
+    // setBoardBgColor1(bgColor1){                                     // to review; might be deprecated
+    //     let element = document.getElementById('header');
+    //     element.backgroundColor = bgColor1;
+    // }
+    // setBoardBgColor2(bgColor2){                                     // to review; might be deprecated
+    //     let element = document.getElementById('divBoardContainer');
+    //     element.backgroundColor = bgColor2;
+    // }
 
-    setBoardNameElement(){}
-    setBoardBgColor1Element(){}
-    setBoardBgColor2Element(){}
-
-    // TODO : deconstruct config with creating setter elements
     // TODO : find a way to deconstruct the saving/updating of the board parameters
     openConfig(){
-        var divPopup = document.createElement('div');
+        // popup container
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        // attribute config
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.board.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        // button container
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
-
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
+
+            // update
+            let successful = false;
             if (inputName.value !== '') {
                 this.board.name = inputName.value;
-                
+                successful = true;
+            }
+            // other elements...
+
+            if (successful){
                 divPopup.parentNode.removeChild(divPopup);
                 closeOverlay();
                 rerender();
             }
-        })
 
-        var btnClose = document.createElement('button');
+        })
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -298,13 +302,12 @@ class BoardRefactored {
             closeOverlay();
         })
 
+        // appending
         divPopupBtnContainer.appendChild(btnSave);
         divPopupBtnContainer.appendChild(btnClose);
-
         divPopup.appendChild(pNameLabel);
         divPopup.appendChild(inputName);
         divPopup.appendChild(divPopupBtnContainer);
-
         document.getElementById('divMainContainer').appendChild(divPopup);
 
         openOverlay();
@@ -338,25 +341,25 @@ class SectionRefactored {
     }
 
     createSectionName(name){
-        var element = document.createElement("h4");
+        let element = document.createElement("h4");
         element.id = 'h4SectionName';
         element.innerHTML = `${name}`;
         return element;
     }
     createAddTaskBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'addTaskBtn';
         element.classList.add();
         element.innerHTML = `Add Task`;
         element.addEventListener('click', () => {
-            var params = createDefaultTask();
+            let params = createDefaultTask();
             this.pushTask(params);
             rerender()
         })
         return element;
     }
     createConfigureSectionBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'configureSectionBtn';
         element.classList.add();
         element.innerHTML = `Configure Section`;
@@ -372,16 +375,16 @@ class SectionRefactored {
     }
     render(){
         // create div section container
-        var sectionContainer = document.createElement("div");
+        let sectionContainer = document.createElement("div");
         sectionContainer.classList.add(`section-container`);
         sectionContainer.style.backgroundColor = this.bgColor;
         
         // create child board details container
-        var sectionDetailsContainer = document.createElement("div");
+        let sectionDetailsContainer = document.createElement("div");
         sectionDetailsContainer.classList.add(`section-details-container`);
         
         // board button container
-        var sectionButtonContainer = document.createElement("div");
+        let sectionButtonContainer = document.createElement("div");
         sectionButtonContainer.classList.add(`section-btn-container`);
 
         // append button container children
@@ -440,9 +443,9 @@ class SectionRefactored {
             };
         })
 
-        for (var i = 0; i < this.contents.length; i++){
-            var task = new Task(this.contents[i]);
-            var taskContainer = task.render()
+        for (let i = 0; i < this.contents.length; i++){
+            let task = new Task(this.contents[i]);
+            let taskContainer = task.render()
             this.sectionContentsContainer.appendChild(taskContainer);
         }
         sectionContainer.appendChild(sectionDetailsContainer);
@@ -459,8 +462,8 @@ class SectionRefactored {
     insertAboveTask(sectionContentsContainer, mouseY) {
         const eventListener = sectionContentsContainer.querySelectorAll('.draggable-to-section:not(.is-dragging)');
 
-        var closestTask = null;
-        var closestOffset = Number.NEGATIVE_INFINITY;
+        let closestTask = null;
+        let closestOffset = Number.NEGATIVE_INFINITY;
 
         eventListener.forEach((taskContainers) => {
             const { top } = taskContainers.getBoundingClientRect();
@@ -480,29 +483,29 @@ class SectionRefactored {
     }
 
     setSectionName(name){
-        var element = document.getElementById('h4SectionName');
+        let element = document.getElementById('h4SectionName');
         element.innerHTML = `${name}`;
     }
     setSectionBgColor(bgColor){
-        // var element = document.getElementById('divSectionContainer');
+        // let element = document.getElementById('divSectionContainer');
         // element.backgroundColor = bgColor1;
     }
     openConfig(){
-        var divPopup = document.createElement('div');
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
 
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
@@ -515,7 +518,7 @@ class SectionRefactored {
             }
         })
 
-        var btnDelete = document.createElement('button');
+        let btnDelete = document.createElement('button');
         btnDelete.id = 'btnDelete';
         btnDelete.innerHTML = 'Delete';
         btnDelete.addEventListener('click', (event) => {
@@ -526,7 +529,7 @@ class SectionRefactored {
                 rerender();
         })
 
-        var btnClose = document.createElement('button');
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -572,13 +575,13 @@ class TaskRefactored{
     }
 
     createTaskName(name){
-        var element = document.createElement("p");
+        let element = document.createElement("p");
         element.id = 'taskname';
         element.innerHTML = `${this.task.name}`;
         return element;
     }
     createConfigureTaskBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'configureTaskBtn';
         element.classList.add();
         element.innerHTML = `Configure Task`;
@@ -594,7 +597,7 @@ class TaskRefactored{
     }
     render(){
         // create div section container
-        var taskContainer = document.createElement("div");
+        let taskContainer = document.createElement("div");
         taskContainer.classList.add(`task-container`);
         taskContainer.classList.add(`SNo.${this.sectionIndex}`)
         taskContainer.classList.add(`TNo.${this.index}`)
@@ -610,11 +613,11 @@ class TaskRefactored{
         });
         
         // create child board details container
-        var taskDetailsContainer = document.createElement("div");
+        let taskDetailsContainer = document.createElement("div");
         taskDetailsContainer.classList.add(`task-details-container`);
 
         // board button container
-        var taskButtonContainer = document.createElement("div");
+        let taskButtonContainer = document.createElement("div");
         taskButtonContainer.classList.add(`task-btn-container`);
 
         // append button container children
@@ -625,10 +628,10 @@ class TaskRefactored{
         taskDetailsContainer.appendChild(taskButtonContainer);
 
         // create section contents container
-        var taskContentsContainer = document.createElement("div");
+        let taskContentsContainer = document.createElement("div");
         taskContentsContainer.classList.add('task-contents-container');
-        for (var i = 0; i < this.contents.length; i++){
-            var task = Task(this.contents[i]);
+        for (let i = 0; i < this.contents.length; i++){
+            let task = Task(this.contents[i]);
             taskContentsContainer.appendChild(task);
         }
         taskContainer.appendChild(taskDetailsContainer);
@@ -639,29 +642,29 @@ class TaskRefactored{
 
     // update
     setTaskName(){
-        var element = document.getElementById('taskname');
+        let element = document.getElementById('taskname');
         element.innerHTML = `${this.task.name}`;
     }
     setTaskBgColor(bgColor){
-        // var element = document.getElementById('divSectionContainer');
+        // let element = document.getElementById('divSectionContainer');
         // element.backgroundColor = bgColor1;
     }
     openConfig(){
-        var divPopup = document.createElement('div');
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
 
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
@@ -674,7 +677,7 @@ class TaskRefactored{
             }
         })
 
-        var btnDelete = document.createElement('button');
+        let btnDelete = document.createElement('button');
         btnDelete.id = 'btnDelete';
         btnDelete.innerHTML = 'Delete';
         btnDelete.addEventListener('click', (event) => {
@@ -685,7 +688,7 @@ class TaskRefactored{
                 rerender();
         })
 
-        var btnClose = document.createElement('button');
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -776,7 +779,7 @@ class Board {
     // Read : Render
     render(){
         // create div board container
-        var boardContainer = document.createElement("div");
+        let boardContainer = document.createElement("div");
         boardContainer.id = `divBoardContainer`
         boardContainer.classList.add(`board-container`);
         boardContainer.style.backgroundColor = this.bgColor2;
@@ -785,11 +788,11 @@ class Board {
         this.boardName = this.createBoardName(this.name);
         
         // create child board details container
-        var boardDetailsContainer = document.createElement("div");
+        let boardDetailsContainer = document.createElement("div");
         boardDetailsContainer.classList.add(`board-details-container`);
 
         // board button container
-        var boardButtonContainer = document.createElement("div");
+        let boardButtonContainer = document.createElement("div");
         boardButtonContainer.classList.add(`board-btn-container`);
         
         // append button container children
@@ -803,11 +806,11 @@ class Board {
         boardDetailsContainer.appendChild(boardButtonContainer);
 
         // create board contents container
-        var boardContentsContainer = document.createElement("div");
+        let boardContentsContainer = document.createElement("div");
         boardContentsContainer.classList.add('board-contents-container');
-        for (var i = 0; i < this.contents.length; i++){
-            var section = new Section(this.id, i, this.contents[i].name, this.contents[i].bgColor, this.contents[i].contents);
-            var sectionContainer = section.render();
+        for (let i = 0; i < this.contents.length; i++){
+            let section = new Section(this.id, i, this.contents[i].name, this.contents[i].bgColor, this.contents[i].contents);
+            let sectionContainer = section.render();
             boardContentsContainer.appendChild(sectionContainer);
         }
         boardContainer.appendChild(boardDetailsContainer);
@@ -836,33 +839,33 @@ class Board {
 
     // Elements
     createBoardName(name){
-        var element = document.createElement("h2");
+        let element = document.createElement("h2");
         element.id = 'h2CurrentBoard';
         element.innerHTML = `Current board: ${name}`;
         return element;
     }
     setBoardName(name){
-        var element = document.getElementById('h2CurrentBoard');
+        let element = document.getElementById('h2CurrentBoard');
         element.innerHTML = `Current board: ${name}`;
     }
     /* WIP */
     // setBoardBgColor1(bgColor1){ // Placeholder
-    //     var element = document.getElementById('h2CurrentBoard');
+    //     let element = document.getElementById('h2CurrentBoard');
     //     element.classList.add(bgColor1);
     // }
     // setBoardBgColor2(bgColor2){ // Placeholder
-    //     var element = document.getElementById('h2CurrentBoard');
+    //     let element = document.getElementById('h2CurrentBoard');
     //     element.classList.add(bgColor1);
     // }
 
     // Todo Onclick Functions
     createOpenBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnOpenBoard';
         element.classList.add();
         element.innerHTML = `Open Board`;
         element.addEventListener('click', (event) => {
-            var uploadInput = document.createElement('input');
+            let uploadInput = document.createElement('input');
             uploadInput.type = 'file';
             uploadInput.id = 'fileInput';
             uploadInput.accept = 'json';
@@ -885,7 +888,7 @@ class Board {
         return element;
     }
     createSaveBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnSaveBoard';
         element.classList.add();
         element.innerHTML = `Save Board`;
@@ -893,7 +896,7 @@ class Board {
             const filename = "newBoard.json";
             const text = JSON.stringify(this.board);
 
-            var element = document.createElement('a');
+            let element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
             element.setAttribute('download', filename);
             element.click();
@@ -901,7 +904,7 @@ class Board {
         return element;
     }
     createConfigureBoardBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnConfigureBoard';
         element.classList.add();
         element.innerHTML = `Configure Board`;
@@ -911,7 +914,7 @@ class Board {
         return element;
     }
     createNewBoardBtn(){ // Clear board is a more accurate way of calling this
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnNewBoard';
         element.classList.add();
         element.innerHTML = `New Board`;
@@ -922,13 +925,13 @@ class Board {
         return element;
     }
     createAddSectionBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'btnAddSection';
         element.classList.add();
         element.innerHTML = `Add Section`;
         element.addEventListener('click', (event) => {
 
-            var params = createDefaultSection();
+            let params = createDefaultSection();
             params.id = board.contents.length;
 
             this.pushSection(params);
@@ -938,21 +941,21 @@ class Board {
     }
 
     openConfig(){
-        var divPopup = document.createElement('div');
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
 
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
@@ -965,7 +968,7 @@ class Board {
             }
         })
 
-        var btnClose = document.createElement('button');
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -1028,16 +1031,16 @@ class Section {
     // Read : Render
     render(){
         // create div section container
-        var sectionContainer = document.createElement("div");
+        let sectionContainer = document.createElement("div");
         sectionContainer.classList.add(`section-container`);
         sectionContainer.style.backgroundColor = this.bgColor;
         
         // create child board details container
-        var sectionDetailsContainer = document.createElement("div");
+        let sectionDetailsContainer = document.createElement("div");
         sectionDetailsContainer.classList.add(`section-details-container`);
         
         // board button container
-        var sectionButtonContainer = document.createElement("div");
+        let sectionButtonContainer = document.createElement("div");
         sectionButtonContainer.classList.add(`section-btn-container`);
 
         // append button container children
@@ -1096,9 +1099,9 @@ class Section {
             };
         })
 
-        for (var i = 0; i < this.contents.length; i++){
-            var task = new Task(this.index, i, this.contents[i].name, this.contents[i].bgColor);
-            var taskContainer = task.render()
+        for (let i = 0; i < this.contents.length; i++){
+            let task = new Task(this.index, i, this.contents[i].name, this.contents[i].bgColor);
+            let taskContainer = task.render()
             this.sectionContentsContainer.appendChild(taskContainer);
         }
         sectionContainer.appendChild(sectionDetailsContainer);
@@ -1121,8 +1124,8 @@ class Section {
     insertAboveTask(sectionContentsContainer, mouseY) {
         const eventListener = sectionContentsContainer.querySelectorAll('.draggable-to-section:not(.is-dragging)');
 
-        var closestTask = null;
-        var closestOffset = Number.NEGATIVE_INFINITY;
+        let closestTask = null;
+        let closestOffset = Number.NEGATIVE_INFINITY;
 
         eventListener.forEach((taskContainers) => {
             const { top } = taskContainers.getBoundingClientRect();
@@ -1151,17 +1154,17 @@ class Section {
 
     // Elements
     createSectionName(name){
-        var element = document.createElement("h4");
+        let element = document.createElement("h4");
         element.id = 'h4SectionName';
         element.innerHTML = `${name}`;
         return element;
     }
     setSectionName(name){
-        var element = document.getElementById('h4SectionName');
+        let element = document.getElementById('h4SectionName');
         element.innerHTML = `${name}`;
     }
     createConfigureSectionBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'configureSectionBtn';
         element.classList.add();
         element.innerHTML = `Configure Section`;
@@ -1171,12 +1174,12 @@ class Section {
         return element;
     }
     createAddTaskBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'addTaskBtn';
         element.classList.add();
         element.innerHTML = `Add Task`;
         element.addEventListener('click', () => {
-            var params = createDefaultTask();
+            let params = createDefaultTask();
             this.pushTask(params);
             rerender()
         })
@@ -1184,21 +1187,21 @@ class Section {
     }
 
     openConfig(){
-        var divPopup = document.createElement('div');
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
 
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
@@ -1211,7 +1214,7 @@ class Section {
             }
         })
 
-        var btnDelete = document.createElement('button');
+        let btnDelete = document.createElement('button');
         btnDelete.id = 'btnDelete';
         btnDelete.innerHTML = 'Delete';
         btnDelete.addEventListener('click', (event) => {
@@ -1222,7 +1225,7 @@ class Section {
                 rerender();
         })
 
-        var btnClose = document.createElement('button');
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -1279,7 +1282,7 @@ class Task {
     // Delete
     selfDelete(){
         const sectionsReference = board.contents;
-        for (var i = 0; i < sectionsReference.length; i++){
+        for (let i = 0; i < sectionsReference.length; i++){
             if (this.sectionIndex === sectionsReference[i].id) {
                 ((board.contents)[i].contents).splice(this.index, 1);
                 rerender()
@@ -1291,7 +1294,7 @@ class Task {
     // Read : Render
     render(){
         // create div section container
-        var taskContainer = document.createElement("div");
+        let taskContainer = document.createElement("div");
         taskContainer.classList.add(`task-container`);
         taskContainer.classList.add(`SNo.${this.sectionIndex}`)
         taskContainer.classList.add(`TNo.${this.index}`)
@@ -1307,11 +1310,11 @@ class Task {
         });
         
         // create child board details container
-        var taskDetailsContainer = document.createElement("div");
+        let taskDetailsContainer = document.createElement("div");
         taskDetailsContainer.classList.add(`task-details-container`);
 
         // board button container
-        var taskButtonContainer = document.createElement("div");
+        let taskButtonContainer = document.createElement("div");
         taskButtonContainer.classList.add(`task-btn-container`);
 
         // append button container children
@@ -1322,11 +1325,11 @@ class Task {
         taskDetailsContainer.appendChild(taskButtonContainer);
 
         // create section contents container
-        var taskContentsContainer = document.createElement("div");
+        let taskContentsContainer = document.createElement("div");
         /* FUTURE WIP */
         // // taskContentsContainer.classList.add('task-contents-container');
-        // // for (var i = 0; i < this.contents.length; i++){
-        // //     var task = Task(this.contents[i]);
+        // // for (let i = 0; i < this.contents.length; i++){
+        // //     let task = Task(this.contents[i]);
         // //     taskContentsContainer.appendChild(task);
         // // }
         taskContainer.appendChild(taskDetailsContainer);
@@ -1337,13 +1340,13 @@ class Task {
 
     // Elements
     createTaskName(name){
-        var element = document.createElement("p");
+        let element = document.createElement("p");
         element.id = 'taskname';
         element.innerHTML = `${name}`;
         return element;
     }
     createConfigureTaskBtn(){
-        var element = document.createElement("button");
+        let element = document.createElement("button");
         element.id = 'configureTaskBtn';
         element.classList.add();
         element.innerHTML = `Configure Task`;
@@ -1354,21 +1357,21 @@ class Task {
     }
 
     openConfig(){
-        var divPopup = document.createElement('div');
+        let divPopup = document.createElement('div');
         divPopup.classList.add('popup-container');
 
-        var pNameLabel = document.createElement('p');
+        let pNameLabel = document.createElement('p');
         pNameLabel.innerHTML = `Current name: ${this.name}`
 
-        var inputName = document.createElement('input');
+        let inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.id = 'inputText'
         inputName.placeholder = 'new name'
 
-        var divPopupBtnContainer = document.createElement('div');
+        let divPopupBtnContainer = document.createElement('div');
         divPopupBtnContainer.classList.add('popup-btn-container');
 
-        var btnSave = document.createElement('button');
+        let btnSave = document.createElement('button');
         btnSave.id = 'btnSave';
         btnSave.innerHTML = 'Save'
         btnSave.addEventListener('click', (event) => {
@@ -1381,7 +1384,7 @@ class Task {
             }
         })
 
-        var btnDelete = document.createElement('button');
+        let btnDelete = document.createElement('button');
         btnDelete.id = 'btnDelete';
         btnDelete.innerHTML = 'Delete';
         btnDelete.addEventListener('click', (event) => {
@@ -1392,7 +1395,7 @@ class Task {
                 rerender();
         })
 
-        var btnClose = document.createElement('button');
+        let btnClose = document.createElement('button');
         btnClose.id = 'btnClose';
         btnClose.innerHTML = 'Close'
         btnClose.addEventListener('click', (event) => {
@@ -1414,6 +1417,22 @@ class Task {
     }
 }
 
+// Board Loading
+function loadBoard(data){
+    if (data !== null){
+        const returnBoard = new Board(data)
+    
+    return returnBoard
+    }
+} // -> Returns Loaded Board
+
+function loadBoardDefaults(){
+    const data = createDefaultBoard()
+    const returnBoard = new Board(data)
+
+    return returnBoard
+} // -> Returns Default Board
+
 // Loading and Rendering
 function load(){
     const thisBoard = loadBoardDefaults();
@@ -1428,24 +1447,8 @@ function renderBoardToMain(boardContainer){
 function rerender(){
     const boardContainer = document.getElementById("divBoardContainer");
     boardContainer.parentNode.removeChild(boardContainer);
-    renderBoardToMain(board.render());
+    renderBoardToMain(board.render()); // Global reliant but intentional
 }
 
-// Board Loading
-function loadBoard(data){
-    if (data !== null){
-        const returnBoard = new Board(data.name, data.bgColor1, data.bgColor2, data.contents)
-    
-    return returnBoard
-    }
-} // -> Returns Loaded Board
-
-function loadBoardDefaults(){
-    const boardParams = createDefaultBoard()
-    const returnBoard = new Board(boardParams.name, boardParams.bgColor1, boardParams.bgColor2, boardParams.contents)
-
-    return returnBoard
-} // -> Returns Default Board
-
 // Main
-var board = load();
+let board = load();
