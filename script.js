@@ -459,7 +459,7 @@ class Section {
 
         // attribute config
         let pNameLabel = document.createElement('p');
-        pNameLabel.innerHTML = `Current name: ${this.name}`
+        pNameLabel.innerHTML = `Current name: ${this.section.name}`
 
         let inputName = document.createElement('input');
         inputName.type = 'text';
@@ -673,7 +673,7 @@ class Task{
 
         // attribute config
         let pNameLabel = document.createElement('p');
-        pNameLabel.innerHTML = `Current name: ${this.name}`
+        pNameLabel.innerHTML = `Current name: ${this.task.name}`
 
         let inputName = document.createElement('input');
         inputName.type = 'text';
