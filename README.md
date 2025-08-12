@@ -1,10 +1,10 @@
-# Kanban-JS : Vanilla HTML,CSS,Javascript (no frameworks or node.js)
+# Vanilla-Kanban : Vanilla HTML,CSS,Javascript (no frameworks or node.js)
 - A simple kanban board application. Create 'todo' sections and drag-and-droppable tasks.
 - Intended to be used locally (serverless).
 - Heavily inspired by Trello.
 
 # About
-- Kanban-JS is under development as part of studying project management and construction of simple applications. It will serve as a personal and offline Kanban Board tool that can open and save boards locally.
+- Vanilla-Kanban is under development as part of studying project management and construction of simple applications. It will serve as a personal and offline Kanban Board tool that can open and save boards locally.
 
 # Installation Instructions
 - Ensure that the three files 'index.html', 'script.js', and 'styles.js' are in the same folder
